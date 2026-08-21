@@ -69,24 +69,7 @@ export class DoctorChecker {
    * Find valid Java JDK 17 or 21 installation
    */
   static async findJdkPath(): Promise<{ path: string; version: string } | null> {
-    // Check JAVA_HOME first
-    if (process.env.JAVA_HOME && (await FileSystem.exists(process.env.JAVA_HOME))) {
-      const ver = await this.getJavaVersionFromHome(process.env.JAVA_HOME);
-      if (ver) return { path: process.env.JAVA_HOME, version: ver };
-    }
-
-    // Check system java binary
-    const javaBin = await CommandRunner.which("java");
-    if (javaBin) {
-      const res = await CommandRunner.run(javaBin, ["-version"]);
-      const out = res.stderr || res.stdout;
-      const verMatch = out.match(/version\s+"([^"]+)"/);
-      if (verMatch) {
-        return { path: path.dirname(path.dirname(javaBin)), version: verMatch[1] };
-      }
-    }
-
-    // Probe standard directories
+    // 1. Check candidate directories first for optimal AGP compatibility (JDK 17/21)
     const candidates: string[] = [];
     if (process.platform === "linux") {
       candidates.push(
@@ -113,6 +96,36 @@ export class DoctorChecker {
       );
     }
 
+    for (const cand of candidates) {
+      if (await FileSystem.exists(cand)) {
+        const ver = await this.getJavaVersionFromHome(cand);
+        if (ver) {
+          const major = parseInt(ver.split(".")[0], 10);
+          if (major === 17 || major === 21) {
+            return { path: cand, version: ver };
+          }
+        }
+      }
+    }
+
+    // 2. Check JAVA_HOME
+    if (process.env.JAVA_HOME && (await FileSystem.exists(process.env.JAVA_HOME))) {
+      const ver = await this.getJavaVersionFromHome(process.env.JAVA_HOME);
+      if (ver) return { path: process.env.JAVA_HOME, version: ver };
+    }
+
+    // 3. Check system java binary
+    const javaBin = await CommandRunner.which("java");
+    if (javaBin) {
+      const res = await CommandRunner.run(javaBin, ["-version"]);
+      const out = res.stderr || res.stdout;
+      const verMatch = out.match(/version\s+"([^"]+)"/);
+      if (verMatch) {
+        return { path: path.dirname(path.dirname(javaBin)), version: verMatch[1] };
+      }
+    }
+
+    // 4. Any candidate directory match fallback
     for (const cand of candidates) {
       if (await FileSystem.exists(cand)) {
         const ver = await this.getJavaVersionFromHome(cand);

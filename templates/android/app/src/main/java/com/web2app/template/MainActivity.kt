@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "Web2App"
         private const val ASSET_DOMAIN = "appassets.androidplatform.net"
-        private const val START_URL = "https://appassets.androidplatform.net/assets/index.html"
+        private const val START_URL = "https://appassets.androidplatform.net/assets/web/index.html"
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -35,10 +35,10 @@ class MainActivity : AppCompatActivity() {
         webView = WebView(this)
         setContentView(webView)
 
-        // Configure WebViewAssetLoader to securely load web files from assets/web/
+        // Configure WebViewAssetLoader to securely load web files from assets/
         assetLoader = WebViewAssetLoader.Builder()
             .setDomain(ASSET_DOMAIN)
-            .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(this, "web"))
+            .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(this))
             .build()
 
         // Configure WebSettings for high performance & modern web features
@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
 
                     // SPA fallback: If requesting a route without file extension on asset domain, fallback to index.html
                     if (uri.host == ASSET_DOMAIN && !uri.path.orEmpty().contains(".")) {
-                        val fallbackUri = Uri.parse("https://$ASSET_DOMAIN/assets/index.html")
+                        val fallbackUri = Uri.parse("https://$ASSET_DOMAIN/assets/web/index.html")
                         return assetLoader.shouldInterceptRequest(fallbackUri)
                     }
                 }

@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -15,9 +16,19 @@ export class Paths {
    * Root of the web2app package installation
    */
   static getPackageRoot(): string {
-    const currentDir = path.dirname(fileURLToPath(import.meta.url));
-    // When running from dist/utils/paths.js or src/utils/paths.ts
-    return path.resolve(currentDir, "../..");
+    let currentDir = path.dirname(fileURLToPath(import.meta.url));
+    for (let i = 0; i < 5; i++) {
+      if (
+        fs.existsSync(path.join(currentDir, "templates", "android")) ||
+        fs.existsSync(path.join(currentDir, "package.json"))
+      ) {
+        return currentDir;
+      }
+      const parent = path.dirname(currentDir);
+      if (parent === currentDir) break;
+      currentDir = parent;
+    }
+    return path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
   }
 
   /**
