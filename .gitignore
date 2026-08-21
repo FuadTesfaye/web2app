@@ -1,0 +1,33 @@
+# Node
+node_modules/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Web2app build output & test scratch
+.web2app/
+dist/android/
+*.apk
+*.aab
+tmp/
+.temp/
+
+# Android generated
+.gradle/
+build/
+local.properties
+captures/
+.externalNativeBuild/
+.cxx/
