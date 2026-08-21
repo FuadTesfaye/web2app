@@ -1,0 +1,37 @@
+#!/bin/sh
+
+# Gradle startup script for POSIX
+app_path=$0
+while [ -h "$app_path" ]; do
+    ls=`ls -ld "$app_path"`
+    link=`expr "$ls" : '.*-> \(.*\)$'`
+    if expr "$link" : '/.*' > /dev/null; then
+        app_path="$link"
+    else
+        app_path=`dirname "$app_path"`"/$link"
+    fi
+done
+
+APP_HOME=`dirname "$app_path"`
+APP_HOME=`cd "$APP_HOME" && pwd`
+APP_BASE_NAME=`basename "$0"`
+CLASSPATH=$APP_HOME/gradle/wrapper/gradle-wrapper.jar
+
+if [ -n "$JAVA_HOME" ] ; then
+    if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
+        JAVACMD=$JAVA_HOME/jre/sh/java
+    else
+        JAVACMD=$JAVA_HOME/bin/java
+    fi
+else
+    JAVACMD=java
+fi
+
+if [ ! -f "$CLASSPATH" ]; then
+    mkdir -p "$APP_HOME/gradle/wrapper"
+    echo "Downloading Gradle wrapper jar..."
+    curl -fsSL -o "$CLASSPATH" "https://raw.githubusercontent.com/gradle/gradle/v8.11.1/gradle/wrapper/gradle-wrapper.jar" || \
+    curl -fsSL -o "$CLASSPATH" "https://repo.gradle.org/artifactory/libs-releases/org/gradle/gradle-wrapper/8.11.1/gradle-wrapper-8.11.1.jar" || true
+fi
+
+exec "$JAVACMD" "-Dorg.gradle.appname=$APP_BASE_NAME" -classpath "$CLASSPATH" org.gradle.wrapper.GradleWrapperMain "$@"
