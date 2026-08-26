@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* ==========================================================================
-   ⚡ RAW ARCHITECTURAL NEOBRUTALISM (ZERO BORDER RADIUS, UNIQUE TYPOGRAPHY)
+   ⚡ RAW ARCHITECTURAL NEOBRUTALISM MULTI-THEME ENGINE
    ========================================================================== */
 
 /* Universal Sharp Border Radius */
@@ -13,9 +13,10 @@
   border-radius: 0px !important;
 }
 
-/* Light Mode Theme Variables */
+/* 1. Theme: Neo Retro (Classic Light) */
 :root,
-.light {
+.light,
+.theme-default {
   --bg: #FFFDF5;
   --surface: #FFFFFF;
   --surface-subtle: #F4F1E8;
@@ -39,8 +40,59 @@
   --dot-opacity: 0.15;
 }
 
-/* Dark Mode Theme Variables (Deep Obsidian & High-Legibility Slate) */
-.dark {
+/* 2. Theme: Cyberpunk Neon (High-Tech Electric) */
+.theme-cyber {
+  --bg: #0A0E1A;
+  --surface: #121B2E;
+  --surface-subtle: #1B2640;
+  --ink: #F8FAFC;
+  --ink-muted: #94A3B8;
+  --ink-rgb: 248, 250, 252;
+  --border-color: #00F0FF;
+  --shadow-color: #00F0FF;
+  
+  --accent-yellow: #FEE75C;
+  --accent-pink: #FF007F;
+  --accent-cyan: #00F0FF;
+  --accent-green: #00FF88;
+  --accent-purple: #B026FF;
+
+  --accent-green-dark: #00FF88;
+  --accent-cyan-dark: #38BDF8;
+  --accent-pink-dark: #FF007F;
+  --accent-purple-dark: #D946EF;
+
+  --dot-opacity: 0.25;
+}
+
+/* 3. Theme: Bubblegum Candy (Vivid Pastel Pop) */
+.theme-bubblegum {
+  --bg: #FFF0F5;
+  --surface: #FFFFFF;
+  --surface-subtle: #FCE7F3;
+  --ink: #2B0938;
+  --ink-muted: #704870;
+  --ink-rgb: 43, 9, 56;
+  --border-color: #2B0938;
+  --shadow-color: #2B0938;
+  
+  --accent-yellow: #FDE047;
+  --accent-pink: #FF69B4;
+  --accent-cyan: #67E8F9;
+  --accent-green: #86EFAC;
+  --accent-purple: #D8B4FE;
+
+  --accent-green-dark: #15803D;
+  --accent-cyan-dark: #0E7490;
+  --accent-pink-dark: #BE185D;
+  --accent-purple-dark: #7E22CE;
+
+  --dot-opacity: 0.15;
+}
+
+/* 4. Theme: Dark Brutalist (Deep Obsidian Charcoal) */
+.dark,
+.theme-dark {
   --bg: #0C0D10;
   --surface: #15171C;
   --surface-subtle: #1C1F26;
@@ -64,6 +116,56 @@
   --dot-opacity: 0.22;
 }
 
+/* 5. Theme: Emerald Matrix (Hacker Terminal) */
+.theme-emerald {
+  --bg: #061A14;
+  --surface: #0C2E24;
+  --surface-subtle: #123E31;
+  --ink: #F0FDF4;
+  --ink-muted: #86EFAC;
+  --ink-rgb: 240, 253, 244;
+  --border-color: #80FF72;
+  --shadow-color: #020D0A;
+  
+  --accent-yellow: #FEF08A;
+  --accent-pink: #FDA4AF;
+  --accent-cyan: #99F6E4;
+  --accent-green: #80FF72;
+  --accent-purple: #E9D5FF;
+
+  --accent-green-dark: #4ADE80;
+  --accent-cyan-dark: #2DD4BF;
+  --accent-pink-dark: #FB7185;
+  --accent-purple-dark: #C084FC;
+
+  --dot-opacity: 0.25;
+}
+
+/* 6. Theme: Sunset Amber (Retro 80s Synthwave) */
+.theme-sunset {
+  --bg: #1B0F2A;
+  --surface: #27163D;
+  --surface-subtle: #371F54;
+  --ink: #FFF1F2;
+  --ink-muted: #FDA4AF;
+  --ink-rgb: 255, 241, 242;
+  --border-color: #FF70A6;
+  --shadow-color: #FF8800;
+  
+  --accent-yellow: #FFB703;
+  --accent-pink: #FF006E;
+  --accent-cyan: #38BDF8;
+  --accent-green: #FB5607;
+  --accent-purple: #8338EC;
+
+  --accent-green-dark: #FB5607;
+  --accent-cyan-dark: #3A86FF;
+  --accent-pink-dark: #FF006E;
+  --accent-purple-dark: #8338EC;
+
+  --dot-opacity: 0.25;
+}
+
 /* Base Styles */
 html {
   scroll-behavior: smooth;
@@ -75,6 +177,8 @@ html {
 body {
   min-height: 100vh;
   overflow-x: hidden;
+  background-color: var(--bg);
+  color: var(--ink);
 }
 
 /* Background Pattern */
@@ -109,11 +213,6 @@ body {
 /* Typographic Accents */
 .text-stroke {
   -webkit-text-stroke: 1.5px var(--ink);
-  color: transparent;
-}
-
-.dark .text-stroke {
-  -webkit-text-stroke: 1.5px #FFFFFF;
   color: transparent;
 }
 

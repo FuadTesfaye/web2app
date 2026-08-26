@@ -1,39 +1,84 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Volume2, VolumeX, Menu, X, Sun, Moon, Sparkles, Terminal } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Volume2, VolumeX, Menu, X, ChevronDown, Check, Sparkles, Palette } from "lucide-react";
 import { playClick, playTone, setMuted, getMuted } from "@/lib/sound";
+
+export interface ThemeOption {
+  id: string;
+  name: string;
+  color: string;
+  badge: string;
+  dark: boolean;
+  icon: string;
+}
+
+export const THEMES: ThemeOption[] = [
+  { id: "theme-default", name: "Neo Retro", color: "#FFE600", badge: "Default", dark: false, icon: "⚡" },
+  { id: "theme-cyber", name: "Cyber Neon", color: "#00F0FF", badge: "Cyber", dark: true, icon: "🚀" },
+  { id: "theme-bubblegum", name: "Bubblegum", color: "#FF69B4", badge: "Pastel", dark: false, icon: "💖" },
+  { id: "theme-dark", name: "Dark Brutal", color: "#121212", badge: "Obsidian", dark: true, icon: "🌙" },
+  { id: "theme-emerald", name: "Emerald Matrix", color: "#80FF72", badge: "Matrix", dark: true, icon: "💻" },
+  { id: "theme-sunset", name: "Sunset Amber", color: "#FF5E36", badge: "80s Synth", dark: true, icon: "🌅" },
+];
 
 export default function Navbar() {
   const [muted, setIsMuted] = useState(false);
-  const [isDark, setIsDark] = useState(false);
+  const [currentTheme, setCurrentTheme] = useState<ThemeOption>(THEMES[0]);
+  const [themeMenuOpen, setThemeMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setIsMuted(getMuted());
     const saved = localStorage.getItem("theme");
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    if (saved === "dark" || (!saved && prefersDark)) {
-      setIsDark(true);
-      document.documentElement.classList.add("dark");
+    let matchedTheme = THEMES[0];
+
+    if (saved) {
+      if (saved === "dark") {
+        matchedTheme = THEMES.find((t) => t.id === "theme-dark") || THEMES[3];
+      } else if (saved === "light") {
+        matchedTheme = THEMES[0];
+      } else {
+        matchedTheme = THEMES.find((t) => t.id === saved) || THEMES[0];
+      }
     } else {
-      setIsDark(false);
-      document.documentElement.classList.remove("dark");
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      if (prefersDark) {
+        matchedTheme = THEMES.find((t) => t.id === "theme-dark") || THEMES[3];
+      }
     }
+
+    setCurrentTheme(matchedTheme);
+    applyThemeClasses(matchedTheme);
   }, []);
 
-  const toggleDarkMode = () => {
-    const nextDark = !isDark;
-    setIsDark(nextDark);
-    if (nextDark) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-      playTone(400, "sine", 0.08);
-    } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-      playTone(700, "triangle", 0.08);
-    }
+  // Handle click outside to close dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setThemeMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const applyThemeClasses = (theme: ThemeOption) => {
+    THEMES.forEach((t) => document.documentElement.classList.remove(t.id));
+    document.documentElement.classList.remove("light", "dark");
+
+    document.documentElement.classList.add(theme.id);
+    document.documentElement.classList.add(theme.dark ? "dark" : "light");
+  };
+
+  const handleSelectTheme = (theme: ThemeOption) => {
+    setCurrentTheme(theme);
+    localStorage.setItem("theme", theme.id);
+    applyThemeClasses(theme);
+    setThemeMenuOpen(false);
+    playClick();
+    playTone(theme.dark ? 440 : 660, "triangle", 0.08);
   };
 
   const handleSoundToggle = () => {
@@ -57,7 +102,7 @@ export default function Navbar() {
             ⚡
           </div>
           <div className="flex flex-col">
-            <span className="font-display font-black text-xl sm:text-2xl tracking-tighter leading-none flex items-center gap-1.5 uppercase">
+            <span className="font-display font-black text-xl sm:text-2xl tracking-tighter leading-none flex items-center gap-1.5 uppercase text-ink">
               web2app
               <span className="text-[10px] font-mono font-bold bg-accent-pink text-ink border-2 border-ink px-1.5 py-0.2 shadow-neo-xs">
                 v0.1
@@ -70,7 +115,7 @@ export default function Navbar() {
         </a>
 
         {/* Desktop Nav Links */}
-        <nav className="hidden md:flex items-center gap-1 font-mono font-bold text-xs uppercase tracking-wider">
+        <nav className="hidden md:flex items-center gap-1 font-mono font-bold text-xs uppercase tracking-wider text-ink">
           <a
             href="#demo"
             onClick={playClick}
@@ -111,7 +156,7 @@ export default function Navbar() {
         {/* Right Controls */}
         <div className="flex items-center gap-2 sm:gap-3">
           
-          {/* Sound Toggle */}
+          {/* Sound FX Toggle */}
           <button
             onClick={handleSoundToggle}
             title={muted ? "Unmute Sound" : "Mute Sound"}
@@ -120,24 +165,68 @@ export default function Navbar() {
             {muted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
           </button>
 
-          {/* Dark Mode Toggle */}
-          <button
-            onClick={toggleDarkMode}
-            title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            className="p-2 bg-surface text-ink border-2 border-ink shadow-neo-xs hover:bg-accent-cyan hover:text-ink active:translate-x-0.5 active:translate-y-0.5 transition-all flex items-center justify-center font-mono text-xs font-bold gap-1.5"
-          >
-            {isDark ? (
-              <>
-                <Sun className="w-4 h-4 text-accent-yellow fill-accent-yellow" />
-                <span className="hidden sm:inline">LIGHT</span>
-              </>
-            ) : (
-              <>
-                <Moon className="w-4 h-4 text-ink" />
-                <span className="hidden sm:inline">DARK</span>
-              </>
+          {/* Theme Dropdown Switcher (Multi-Theme Preset Engine) */}
+          <div className="relative" ref={dropdownRef}>
+            <button
+              onClick={() => {
+                setThemeMenuOpen(!themeMenuOpen);
+                playClick();
+              }}
+              title="Switch Color Theme"
+              className="btn-sharp px-3 py-2 bg-surface text-ink border-2 border-ink shadow-neo-xs hover:bg-surface-subtle active:translate-x-0.5 active:translate-y-0.5 transition-all flex items-center gap-2 font-mono text-xs font-bold"
+            >
+              <span
+                className="w-3.5 h-3.5 border border-ink shadow-[1px_1px_0px_0px_var(--shadow-color)] shrink-0"
+                style={{ backgroundColor: currentTheme.color }}
+              />
+              <span className="hidden sm:inline font-black uppercase tracking-tight">
+                {currentTheme.name}
+              </span>
+              <ChevronDown
+                className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                  themeMenuOpen ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+
+            {/* Dropdown Menu */}
+            {themeMenuOpen && (
+              <div className="absolute right-0 mt-2 w-56 bg-surface text-ink border-3 border-ink shadow-neo-md z-50 p-2 flex flex-col gap-1 font-mono text-xs font-bold animate-in fade-in slide-in-from-top-2 duration-150">
+                <div className="px-2 py-1 text-[10px] font-black uppercase text-ink-muted border-b border-ink/20 mb-1 flex items-center justify-between">
+                  <span>// Select Theme</span>
+                  <Palette className="w-3 h-3 text-accent-yellow" />
+                </div>
+                {THEMES.map((theme) => {
+                  const isSelected = currentTheme.id === theme.id;
+                  return (
+                    <button
+                      key={theme.id}
+                      onClick={() => handleSelectTheme(theme)}
+                      className={`flex items-center justify-between px-2.5 py-2 border-2 transition-all text-left ${
+                        isSelected
+                          ? "bg-accent-yellow text-ink border-ink shadow-neo-xs font-black"
+                          : "bg-surface hover:bg-surface-subtle border-transparent hover:border-ink/40"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span
+                          className="w-3.5 h-3.5 border border-ink shrink-0 shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)]"
+                          style={{ backgroundColor: theme.color }}
+                        />
+                        <span className="text-xs">{theme.name}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-[9px] px-1 py-0.2 border border-ink/40 bg-surface text-ink opacity-80 uppercase">
+                          {theme.badge}
+                        </span>
+                        {isSelected && <Check className="w-3.5 h-3.5 text-ink stroke-[3]" />}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
             )}
-          </button>
+          </div>
 
           {/* CTA Button */}
           <a
@@ -145,7 +234,7 @@ export default function Navbar() {
             onClick={playClick}
             className="px-4 py-2 bg-accent-yellow text-ink border-3 border-ink shadow-neo-sm hover:shadow-neo-md hover:translate-x-[-2px] hover:translate-y-[-2px] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none font-display font-black text-xs sm:text-sm uppercase tracking-tight transition-all flex items-center gap-1.5"
           >
-            <span>Run Studio</span>
+            <span>Studio</span>
             <Sparkles className="w-3.5 h-3.5" />
           </a>
 
@@ -215,6 +304,38 @@ export default function Navbar() {
           >
             <span>[05] FAQ</span>
           </a>
+
+          {/* Mobile Theme Selector Grid */}
+          <div className="mt-2 pt-2 border-t-2 border-ink/20">
+            <span className="text-[10px] font-black text-ink-muted uppercase block mb-2">
+              // Choose Palette Theme:
+            </span>
+            <div className="grid grid-cols-2 gap-1.5">
+              {THEMES.map((theme) => {
+                const isSelected = currentTheme.id === theme.id;
+                return (
+                  <button
+                    key={theme.id}
+                    onClick={() => {
+                      handleSelectTheme(theme);
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`flex items-center gap-2 px-2 py-2 border-2 text-[11px] font-bold ${
+                      isSelected
+                        ? "bg-accent-yellow text-ink border-ink shadow-neo-xs font-black"
+                        : "bg-surface border-ink/30 hover:border-ink"
+                    }`}
+                  >
+                    <span
+                      className="w-3 h-3 border border-ink shrink-0"
+                      style={{ backgroundColor: theme.color }}
+                    />
+                    <span className="truncate">{theme.name}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
       )}
     </header>
