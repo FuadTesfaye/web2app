@@ -1,25 +1,37 @@
-import { AndroidBuilder } from "../platforms/android/android-builder.js";
+import { MultiPlatformBuilder } from "../platforms/multi-platform-builder.js";
 import { BuildOptions } from "../types.js";
 import { Logger } from "../utils/logger.js";
 
 export async function buildCommand(
-  platform: string = "android",
+  platformOrUrl?: string,
   options: BuildOptions = {}
 ) {
-  const normalizedPlatform = (platform || "android").toLowerCase();
+  let targetPlatform = options.platform || platformOrUrl || "all";
+  let targetUrl = options.url;
 
-  if (normalizedPlatform !== "android") {
+  // Check if first argument is a URL
+  if (platformOrUrl && /^https?:\/\//i.test(platformOrUrl)) {
+    targetUrl = platformOrUrl;
+    targetPlatform = "all";
+  }
+
+  const validPlatforms = ["all", "android", "windows", "debian", "arch"];
+  const requestedPlatforms = targetPlatform.split(",").map((p) => p.trim().toLowerCase());
+  const hasInvalid = requestedPlatforms.some((p) => !validPlatforms.includes(p));
+
+  if (hasInvalid && !targetUrl) {
     Logger.error(
-      `Unsupported platform: "${platform}".`,
-      `Currently only "android" is supported in web2app v0.1.0.`
+      `Unsupported platform in "${targetPlatform}".`,
+      `Supported platforms: "all", "android", "windows", "debian", "arch" (or comma-separated).`
     );
     process.exit(1);
   }
 
   try {
-    await AndroidBuilder.build(process.cwd(), {
+    await MultiPlatformBuilder.build(process.cwd(), {
       ...options,
-      platform: "android",
+      platform: targetPlatform,
+      url: targetUrl,
     });
   } catch (err: any) {
     Logger.error("Build failed!", err?.message || String(err));

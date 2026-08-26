@@ -22,7 +22,10 @@ export class ConfigLoader {
   /**
    * Load and validate configuration
    */
-  static async load(projectRoot: string = process.cwd()): Promise<Web2AppConfig> {
+  static async load(
+    projectRoot: string = process.cwd(),
+    overrides: Partial<Web2AppUserConfig> = {}
+  ): Promise<Web2AppConfig> {
     const configPath = await this.findConfigFile(projectRoot);
     let rawConfig: Partial<Web2AppUserConfig> = {};
 
@@ -45,23 +48,37 @@ export class ConfigLoader {
       Logger.debug("No web2app.config.* found, deriving config from project metadata");
     }
 
+    // Merge overrides
+    const mergedRaw = { ...rawConfig, ...overrides };
+
+    // If a URL is configured or passed as override
+    let urlDerivedAppName: string | undefined;
+    let urlDerivedPackageName: string | undefined;
+    if (mergedRaw.url) {
+      const derived = this.deriveFromUrl(mergedRaw.url);
+      urlDerivedAppName = derived.appName;
+      urlDerivedPackageName = derived.packageName;
+    }
+
     // Read package.json for fallbacks if fields are missing
     const pkgPath = path.join(projectRoot, "package.json");
     const pkg = await FileSystem.readJson<{ name?: string; version?: string; displayName?: string }>(pkgPath);
 
     const derivedAppName =
-      rawConfig.appName ||
+      mergedRaw.appName ||
+      urlDerivedAppName ||
       pkg?.displayName ||
       (pkg?.name ? this.sanitizeAppName(pkg.name) : DEFAULT_APP_NAME);
 
     const derivedPackageName =
-      rawConfig.packageName ||
+      mergedRaw.packageName ||
+      urlDerivedPackageName ||
       (pkg?.name ? this.derivePackageName(pkg.name) : DEFAULT_PACKAGE_NAME);
 
-    const derivedVersion = rawConfig.version || pkg?.version || DEFAULT_VERSION;
+    const derivedVersion = mergedRaw.version || pkg?.version || DEFAULT_VERSION;
 
     const merged = {
-      ...rawConfig,
+      ...mergedRaw,
       appName: derivedAppName,
       packageName: derivedPackageName,
       version: derivedVersion,
@@ -74,6 +91,42 @@ export class ConfigLoader {
     }
 
     return parsed.data;
+  }
+
+  /**
+   * Derive appName and packageName from a web URL
+   */
+  static deriveFromUrl(rawUrl: string): { appName: string; packageName: string } {
+    try {
+      const parsed = new URL(rawUrl);
+      const host = parsed.hostname.replace(/^www\./, "");
+      const hostParts = host.split(".").filter(Boolean);
+
+      // Derive app name: e.g. "github.com" -> "Github", "sub.domain.co.uk" -> "Sub Domain"
+      const domainName = hostParts.length > 1 ? hostParts.slice(0, -1).join(" ") : hostParts[0];
+      const appName = domainName
+        .split(/[-_.\s]+/)
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(" ") || DEFAULT_APP_NAME;
+
+      // Derive package name: e.g. "sub.domain.com" -> "com.domain.sub"
+      const reversedParts = [...hostParts]
+        .reverse()
+        .map((p) => p.replace(/[^a-zA-Z0-9_]/g, "").toLowerCase())
+        .filter((p) => /^[a-zA-Z]/.test(p));
+
+      let packageName = DEFAULT_PACKAGE_NAME;
+      if (reversedParts.length >= 2) {
+        packageName = reversedParts.slice(0, 3).join(".");
+        if (!packageName.includes(".")) packageName = `com.${packageName}.app`;
+      } else if (reversedParts.length === 1) {
+        packageName = `com.${reversedParts[0]}.app`;
+      }
+
+      return { appName, packageName };
+    } catch {
+      return { appName: DEFAULT_APP_NAME, packageName: DEFAULT_PACKAGE_NAME };
+    }
   }
 
   /**
@@ -105,3 +158,4 @@ export class ConfigLoader {
     return `com.web2app.${parts[0] || "app"}`;
   }
 }
+

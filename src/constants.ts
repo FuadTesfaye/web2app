@@ -1,6 +1,6 @@
 export const CLI_NAME = "web2app";
 export const CLI_VERSION = "0.1.0";
-export const CLI_DESCRIPTION = "Transform web apps into high-performance native Android apps";
+export const CLI_DESCRIPTION = "Transform web apps and web pages into high-performance native apps (Android, Windows, Debian, Arch)";
 
 export const CONFIG_FILE_NAMES = [
   "web2app.config.ts",
@@ -22,7 +22,25 @@ export const DEFAULT_ANDROID_COMPILE_SDK = 35;
 export const ANDROID_PACKAGE_NAME_REGEX = /^[a-zA-Z][a-zA-Z0-9_]*(\.[a-zA-Z][a-zA-Z0-9_]*)+$/;
 
 export const WEB2APP_DIR = ".web2app";
+export const DEFAULT_APP_DIR = "app";
+
 export const ANDROID_DIR_NAME = "android";
-export const DIST_DIR = "dist";
-export const ANDROID_DIST_DIR = "dist/android";
+export const WINDOWS_DIR_NAME = "windows";
+export const DEBIAN_DIR_NAME = "debian";
+export const ARCH_DIR_NAME = "arch";
+
+export const SUPPORTED_PLATFORMS = [
+  "android",
+  "windows",
+  "debian",
+  "arch",
+] as const;
+
+export const DIST_DIR = "app";
+export const ANDROID_DIST_DIR = "app/android";
+export const WINDOWS_DIST_DIR = "app/windows";
+export const DEBIAN_DIST_DIR = "app/debian";
+export const ARCH_DIST_DIR = "app/arch";
+
 export const ANDROID_ASSETS_WEB_DIR = "app/src/main/assets/web";
+

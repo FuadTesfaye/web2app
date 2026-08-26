@@ -1,13 +1,50 @@
+import fs from "node:fs/promises";
 import path from "node:path";
 import { PackageManager, ProjectInfo, WebFramework } from "../types.js";
 import { FileSystem } from "../utils/filesystem.js";
 import { Logger } from "../utils/logger.js";
+import { ConfigLoader } from "./config-loader.js";
 
 export class ProjectDetector {
   /**
-   * Detect web project characteristics from the target directory
+   * Detect web project characteristics from the target directory or URL
    */
-  static async detect(rootDir: string = process.cwd()): Promise<ProjectInfo> {
+  static async detect(rootDirOrUrl: string = process.cwd()): Promise<ProjectInfo> {
+    // If target is a remote URL
+    if (/^https?:\/\//i.test(rootDirOrUrl)) {
+      const { appName, packageName } = ConfigLoader.deriveFromUrl(rootDirOrUrl);
+      return {
+        rootDir: process.cwd(),
+        framework: "url",
+        packageManager: "npm",
+        packageName,
+        appName,
+        version: "1.0.0",
+        hasPackageJson: false,
+        hasBuildScript: false,
+        webOutputDir: "",
+        url: rootDirOrUrl,
+      };
+    }
+
+    const rootDir = path.resolve(rootDirOrUrl);
+
+    // If target is a single HTML file
+    if ((await FileSystem.exists(rootDir)) && !(await fs.stat(rootDir)).isDirectory()) {
+      const parentDir = path.dirname(rootDir);
+      return {
+        rootDir: parentDir,
+        framework: "static",
+        packageManager: "npm",
+        appName: "Web App",
+        packageName: "com.web2app.app",
+        version: "1.0.0",
+        hasPackageJson: false,
+        hasBuildScript: false,
+        webOutputDir: parentDir,
+      };
+    }
+
     const pkgPath = path.join(rootDir, "package.json");
     const hasPackageJson = await FileSystem.exists(pkgPath);
 
@@ -38,6 +75,7 @@ export class ProjectDetector {
     Logger.debug(`Detected project: ${JSON.stringify(projectInfo)}`);
     return projectInfo;
   }
+
 
   /**
    * Detect package manager via lockfiles

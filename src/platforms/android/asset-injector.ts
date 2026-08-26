@@ -21,9 +21,21 @@ export class AssetInjector {
 
     // Copy web build files
     let fileCount = 0;
+    const ignored = new Set([
+      ".git",
+      ".github",
+      ".DS_Store",
+      ".web2app",
+      "app",
+      "dist",
+      "node_modules",
+      "templates",
+      "tests",
+      "coverage",
+    ]);
+
     await FileSystem.copyDir(webOutputDir, androidAssetsDir, (filename) => {
-      // Ignore hidden files and system temp files
-      if (filename.startsWith(".DS_Store") || filename.startsWith(".git")) {
+      if (ignored.has(filename) || filename.startsWith(".DS_Store")) {
         return false;
       }
       fileCount++;
@@ -32,5 +44,6 @@ export class AssetInjector {
 
     Logger.debug(`Injected ${fileCount} assets into Android project`);
     return { fileCount, targetDir: androidAssetsDir };
+
   }
 }

@@ -1,4 +1,4 @@
-# Node
+# Node & Package Managers
 node_modules/
 dist/
 npm-debug.log*
@@ -6,7 +6,12 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# OS
+# Next.js Build Outputs
+.next/
+out/
+.qodo/
+
+# OS Metadata
 .DS_Store
 Thumbs.db
 
@@ -18,11 +23,15 @@ Thumbs.db
 
 # Web2app build output & test scratch
 .web2app/
+/app/
+landing/app/
 dist/android/
 *.apk
+
 *.aab
 tmp/
 .temp/
+!templates/**/gradle-wrapper.jar
 
 # Android generated
 .gradle/

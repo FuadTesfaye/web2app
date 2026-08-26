@@ -42,7 +42,7 @@ describe("AndroidBuilder Pipeline Components", () => {
 
   it("should resolve correct output paths for dist apk", () => {
     const distDir = Paths.getAndroidDistDir(tempDir);
-    expect(distDir).toBe(path.join(tempDir, "dist", "android"));
+    expect(distDir).toBe(path.join(tempDir, "app", "android"));
 
     const gradleApk = Paths.getGradleApkOutputPath(tempDir, "debug");
     expect(gradleApk).toContain("app/build/outputs/apk/debug/app-debug.apk");

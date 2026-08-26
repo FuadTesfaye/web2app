@@ -23,12 +23,14 @@ program
   .option("--app-name <name>", "Application display name")
   .option("--package-name <id>", "Android package ID (e.g. com.example.myapp)")
   .option("--app-version <ver>", "Application version string")
+  .option("--url <url>", "Live web page URL to convert")
   .action(async (options) => {
     try {
       await initCommand({
         appName: options.appName,
         packageName: options.packageName,
         version: options.appVersion,
+        url: options.url,
         force: options.force,
         yes: options.yes,
       });
@@ -39,35 +41,36 @@ program
   });
 
 program
-  .command("build [platform]")
-  .description("Build native application (default: android)")
-  .option("-r, --release", "Build release APK instead of debug APK")
+  .command("build [platformOrUrl]")
+  .description("Build applications for platforms (android, windows, debian, arch, all) or a URL")
+  .option("-u, --url <url>", "Convert a live web page URL into apps")
+  .option("-r, --release", "Build release APK / package")
   .option("-b, --bundle", "Build Android App Bundle (.aab)")
   .option("--skip-web-build", "Skip web build step and use existing assets")
   .option("-c, --clean", "Clean native wrapper before building")
-  .option("-o, --out <dir>", "Custom output directory for generated APK")
+  .option("-o, --out <dir>", "Custom output directory (default: app)")
   .option("--verbose", "Show detailed build logs")
-  .action(async (platform = "android", options) => {
-    await buildCommand(platform, options);
+  .action(async (platformOrUrl = "all", options) => {
+    await buildCommand(platformOrUrl, options);
   });
 
 program
   .command("doctor")
-  .description("Check local environment dependencies (Node, Java, Android SDK, ADB)")
+  .description("Check local environment dependencies (Node, Java, Android SDK, ADB, packaging tools)")
   .action(async () => {
     await doctorCommand();
   });
 
 program
   .command("clean")
-  .description("Clean generated .web2app work directory and build outputs")
+  .description("Clean generated .web2app work directory and app/ build outputs")
   .action(async () => {
     await cleanCommand();
   });
 
 program
   .command("run [platform]")
-  .description("Build, install, and launch application on connected Android device or emulator")
+  .description("Build, install, and launch application on Android device or local system")
   .option("-d, --device <id>", "Target specific ADB device serial")
   .option("-r, --release", "Run release build")
   .option("--verbose", "Show detailed logs")
@@ -77,14 +80,25 @@ program
 
 program
   .command("open [platform]")
-  .description("Open generated native project in Android Studio")
+  .description("Open generated native project in Android Studio or file explorer")
   .action(async (platform = "android") => {
     await openCommand(platform);
   });
 
-program.parse(process.argv);
+// Handle direct invocation like `web2app https://example.com` or `web2app`
+const args = process.argv.slice(2);
+const knownCommands = ["init", "build", "doctor", "clean", "run", "open", "-v", "--version", "-h", "--help"];
 
-if (!process.argv.slice(2).length) {
-  Logger.banner();
-  program.outputHelp();
+if (args.length > 0 && !knownCommands.includes(args[0]) && !args[0].startsWith("-")) {
+  // Argument is a URL or custom platform/path
+  const target = args[0];
+  const isUrl = /^https?:\/\//i.test(target);
+  await buildCommand(isUrl ? target : "all", isUrl ? { url: target } : {});
+} else {
+  program.parse(process.argv);
+
+  if (!args.length) {
+    Logger.banner();
+    program.outputHelp();
+  }
 }

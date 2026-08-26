@@ -13,6 +13,12 @@ export class WebBuilder {
     config: Web2AppConfig,
     options: { verbose?: boolean; skipBuild?: boolean } = {}
   ): Promise<string> {
+    // Handle live URL apps (no local build required)
+    if (config.url || projectInfo.framework === "url") {
+      Logger.info(`Live URL target detected (${config.url || projectInfo.url}). Skipping local web build.`);
+      return "";
+    }
+
     const rootDir = projectInfo.rootDir;
     const outputSubdir = config.webDir || projectInfo.webOutputDir;
     const outputDir = path.resolve(rootDir, outputSubdir);
@@ -23,6 +29,7 @@ export class WebBuilder {
       await this.validateOutputDir(outputDir);
       return outputDir;
     }
+
 
     // Handle static HTML projects (no build required)
     if (projectInfo.framework === "static" && !config.buildCommand && !projectInfo.hasBuildScript) {

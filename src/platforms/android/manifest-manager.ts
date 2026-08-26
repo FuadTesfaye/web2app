@@ -19,7 +19,50 @@ export class ManifestManager {
 
     // 2. Update AndroidManifest.xml (orientation, permissions)
     await this.updateManifestXml(androidDir, config);
+
+    // 3. Update MainActivity.kt (start URL & domain)
+    await this.updateMainActivity(androidDir, config);
   }
+
+  private static async updateMainActivity(
+    androidDir: string,
+    config: Web2AppConfig
+  ): Promise<void> {
+    const activityPath = path.join(
+      androidDir,
+      "app",
+      "src",
+      "main",
+      "java",
+      "com",
+      "web2app",
+      "template",
+      "MainActivity.kt"
+    );
+
+    if (!(await FileSystem.exists(activityPath))) {
+      return;
+    }
+
+    let content = (await FileSystem.readFile(activityPath)) || "";
+    if (config.url) {
+      let host = "appassets.androidplatform.net";
+      try {
+        host = new URL(config.url).hostname;
+      } catch {}
+
+      content = content.replace(
+        /private const val START_URL = "[^"]*"/,
+        `private const val START_URL = "${config.url}"`
+      );
+      content = content.replace(
+        /private const val ASSET_DOMAIN = "[^"]*"/,
+        `private const val ASSET_DOMAIN = "${host}"`
+      );
+    }
+    await FileSystem.writeFile(activityPath, content);
+  }
+
 
   /**
    * Escape XML string contents

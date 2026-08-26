@@ -86,12 +86,21 @@ export class FileSystem {
     destDir: string,
     filter?: (filename: string) => boolean
   ): Promise<void> {
+    const resolvedSrc = path.resolve(srcDir);
+    const resolvedDest = path.resolve(destDir);
+
     await this.ensureDir(destDir);
     const entries = await fs.readdir(srcDir, { withFileTypes: true });
 
     for (const entry of entries) {
       const srcPath = path.join(srcDir, entry.name);
       const destPath = path.join(destDir, entry.name);
+      const resolvedEntry = path.resolve(srcPath);
+
+      // Prevent copying the destination directory into itself
+      if (resolvedEntry === resolvedDest || resolvedDest.startsWith(resolvedEntry + path.sep)) {
+        continue;
+      }
 
       if (filter && !filter(entry.name)) {
         continue;
@@ -105,6 +114,7 @@ export class FileSystem {
       }
     }
   }
+
 
   /**
    * Replace string patterns inside a text file
