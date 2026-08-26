@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Volume2, VolumeX, Menu, X, ChevronDown, Check, Sparkles, Palette } from "lucide-react";
+import { Volume2, VolumeX, Menu, X, ChevronDown, Check, Sparkles, Palette, BookOpen } from "lucide-react";
 import { playClick, playTone, setMuted, getMuted } from "@/lib/sound";
 
 export interface ThemeOption {
@@ -94,7 +94,7 @@ export default function Navbar() {
         
         {/* Brand Logo */}
         <a 
-          href="#" 
+          href="/" 
           onClick={playClick}
           className="flex items-center gap-2 sm:gap-3 group focus-visible:outline-none shrink-0"
         >
@@ -117,39 +117,47 @@ export default function Navbar() {
         {/* Desktop Nav Links */}
         <nav className="hidden lg:flex items-center gap-1 font-mono font-bold text-xs uppercase tracking-wider text-ink">
           <a
-            href="#demo"
+            href="/#demo"
             onClick={playClick}
             className="px-2.5 py-1.5 hover:bg-accent-yellow hover:text-ink border-2 border-transparent hover:border-ink transition-all"
           >
-            [01] Live Studio
+            [01] Studio
           </a>
           <a
-            href="#platforms"
+            href="/#platforms"
             onClick={playClick}
             className="px-2.5 py-1.5 hover:bg-accent-cyan hover:text-ink border-2 border-transparent hover:border-ink transition-all"
           >
             [02] Platforms
           </a>
           <a
-            href="#components"
+            href="/#components"
             onClick={playClick}
             className="px-2.5 py-1.5 hover:bg-accent-pink hover:text-ink border-2 border-transparent hover:border-ink transition-all"
           >
             [03] UI Kit
           </a>
           <a
-            href="#benchmarks"
+            href="/#benchmarks"
             onClick={playClick}
             className="px-2.5 py-1.5 hover:bg-accent-purple hover:text-ink border-2 border-transparent hover:border-ink transition-all"
           >
             [04] Benchmarks
           </a>
           <a
-            href="#faq"
+            href="/#faq"
             onClick={playClick}
             className="px-2.5 py-1.5 hover:bg-accent-green hover:text-ink border-2 border-transparent hover:border-ink transition-all"
           >
             [05] FAQ
+          </a>
+          <a
+            href="/docs"
+            onClick={playClick}
+            className="px-3 py-1.5 bg-accent-yellow text-ink border-2 border-ink shadow-neo-xs hover:bg-accent-yellow/90 transition-all flex items-center gap-1.5 font-black ml-1"
+          >
+            <BookOpen className="w-3.5 h-3.5" />
+            <span>[06] Docs</span>
           </a>
         </nav>
 
@@ -230,7 +238,7 @@ export default function Navbar() {
 
           {/* CTA Studio Button */}
           <a
-            href="#demo"
+            href="/#demo"
             onClick={playClick}
             className="px-2.5 sm:px-4 py-1.5 sm:py-2 bg-accent-yellow text-ink border-2 sm:border-3 border-ink shadow-neo-xs sm:shadow-neo-sm hover:shadow-neo-md active:translate-x-[1px] active:translate-y-[1px] font-display font-black text-[11px] sm:text-xs md:text-sm uppercase tracking-tight transition-all items-center gap-1 sm:gap-1.5 shrink-0 hidden xs:flex"
           >
@@ -256,7 +264,22 @@ export default function Navbar() {
       {mobileMenuOpen && (
         <div className="lg:hidden mt-2.5 pt-2.5 border-t-2 border-ink flex flex-col gap-2 font-mono font-bold text-xs uppercase bg-surface text-ink p-3 border-2 border-ink shadow-neo-md max-w-full">
           <a
-            href="#demo"
+            href="/docs"
+            onClick={() => {
+              setMobileMenuOpen(false);
+              playClick();
+            }}
+            className="px-3 py-2.5 bg-accent-yellow text-ink border-2 border-ink shadow-neo-xs flex items-center justify-between font-black"
+          >
+            <span className="flex items-center gap-2">
+              <BookOpen className="w-4 h-4" />
+              <span>[06] Documentation Portal</span>
+            </span>
+            <span className="text-[10px] bg-surface text-ink px-1.5 py-0.2 border border-ink">READ</span>
+          </a>
+
+          <a
+            href="/#demo"
             onClick={() => {
               setMobileMenuOpen(false);
               playClick();
@@ -266,7 +289,7 @@ export default function Navbar() {
             <span>[01] Live Studio</span>
           </a>
           <a
-            href="#platforms"
+            href="/#platforms"
             onClick={() => {
               setMobileMenuOpen(false);
               playClick();
@@ -276,7 +299,7 @@ export default function Navbar() {
             <span>[02] 4 Target Platforms</span>
           </a>
           <a
-            href="#components"
+            href="/#components"
             onClick={() => {
               setMobileMenuOpen(false);
               playClick();
@@ -286,7 +309,7 @@ export default function Navbar() {
             <span>[03] Neobrutal UI Kit</span>
           </a>
           <a
-            href="#benchmarks"
+            href="/#benchmarks"
             onClick={() => {
               setMobileMenuOpen(false);
               playClick();
@@ -296,7 +319,7 @@ export default function Navbar() {
             <span>[04] Benchmarks</span>
           </a>
           <a
-            href="#faq"
+            href="/#faq"
             onClick={() => {
               setMobileMenuOpen(false);
               playClick();

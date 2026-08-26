@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Send, Check } from "lucide-react";
+import { Send, Check, BookOpen } from "lucide-react";
 import { playClick, playTone } from "@/lib/sound";
 
 export default function Footer() {
@@ -43,24 +43,28 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Quick Links */}
+          {/* Quick Navigation Links */}
           <div className="md:col-span-3 flex flex-col gap-2 font-bold uppercase">
             <span className="text-accent-yellow font-black text-xs uppercase mb-1 tracking-wider">
               [Navigation]
             </span>
-            <a href="#demo" className="text-gray-400 hover:text-white transition-colors">
+            <a href="/docs" className="text-accent-yellow hover:text-white transition-colors flex items-center gap-1.5">
+              <BookOpen className="w-3.5 h-3.5" />
+              <span>[00] Documentation</span>
+            </a>
+            <a href="/#demo" className="text-gray-400 hover:text-white transition-colors">
               [01] Live Studio
             </a>
-            <a href="#platforms" className="text-gray-400 hover:text-white transition-colors">
+            <a href="/#platforms" className="text-gray-400 hover:text-white transition-colors">
               [02] Platform Targets
             </a>
-            <a href="#components" className="text-gray-400 hover:text-white transition-colors">
+            <a href="/#components" className="text-gray-400 hover:text-white transition-colors">
               [03] UI Kit Tokens
             </a>
-            <a href="#benchmarks" className="text-gray-400 hover:text-white transition-colors">
+            <a href="/#benchmarks" className="text-gray-400 hover:text-white transition-colors">
               [04] Benchmarks
             </a>
-            <a href="#faq" className="text-gray-400 hover:text-white transition-colors">
+            <a href="/#faq" className="text-gray-400 hover:text-white transition-colors">
               [05] FAQ
             </a>
           </div>
