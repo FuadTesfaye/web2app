@@ -41,40 +41,40 @@ export default function FaqSection() {
   };
 
   return (
-    <section id="faq" className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-t-3 border-ink bg-surface text-ink">
-      <div className="max-w-4xl mx-auto">
+    <section id="faq" className="py-14 sm:py-20 lg:py-24 px-3 sm:px-6 lg:px-8 border-t-3 border-ink bg-surface text-ink w-full max-w-full">
+      <div className="max-w-4xl mx-auto w-full">
         
         {/* Header */}
-        <div className="text-center mb-12 sm:mb-16">
-          <div className="inline-block bg-accent-yellow text-ink font-mono font-black text-xs px-3 py-1 border-2 border-ink shadow-neo-xs uppercase tracking-widest mb-3">
+        <div className="text-center mb-10 sm:mb-16">
+          <div className="inline-block bg-accent-yellow text-ink font-mono font-black text-[10px] sm:text-xs px-3 py-1 border-2 border-ink shadow-neo-xs uppercase tracking-widest mb-3">
             [// 07 FREQUENT_QUESTIONS]
           </div>
-          <h2 className="font-display font-black text-3xl sm:text-5xl uppercase tracking-tighter">
+          <h2 className="font-display font-black text-2xl xs:text-3xl sm:text-5xl uppercase tracking-tighter px-2">
             Frequently Answered Inquiries
           </h2>
         </div>
 
         {/* Accordion */}
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {faqs.map((faq, idx) => {
             const isOpen = openIndex === idx;
             return (
               <div
                 key={idx}
-                className="bg-surface border-3 border-ink shadow-neo-sm overflow-hidden transition-all"
+                className="bg-surface border-2 sm:border-3 border-ink shadow-neo-xs sm:shadow-neo-sm overflow-hidden transition-all"
               >
                 <button
                   onClick={() => toggle(idx)}
-                  className="w-full p-4 sm:p-5 text-left font-display font-black text-base sm:text-lg uppercase flex items-center justify-between gap-4 hover:bg-accent-yellow/20 transition-colors"
+                  className="w-full p-3.5 sm:p-5 text-left font-display font-black text-sm xs:text-base sm:text-lg uppercase flex items-center justify-between gap-3 hover:bg-accent-yellow/20 transition-colors"
                 >
-                  <span className="leading-snug">{faq.q}</span>
-                  <span className="w-8 h-8 bg-surface border-2 border-ink shadow-neo-xs flex items-center justify-center font-mono shrink-0 font-black">
-                    {isOpen ? <Minus className="w-4 h-4 stroke-[3]" /> : <Plus className="w-4 h-4 stroke-[3]" />}
+                  <span className="leading-snug break-words pr-2">{faq.q}</span>
+                  <span className="w-7 h-7 sm:w-8 sm:h-8 bg-surface border-2 border-ink shadow-neo-xs flex items-center justify-center font-mono shrink-0 font-black">
+                    {isOpen ? <Minus className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[3]" /> : <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[3]" />}
                   </span>
                 </button>
 
                 {isOpen && (
-                  <div className="p-4 sm:p-5 pt-0 font-sans font-semibold text-sm text-ink-muted border-t-2 border-ink/15 leading-relaxed">
+                  <div className="p-3.5 sm:p-5 pt-0 font-sans font-semibold text-xs sm:text-sm text-ink-muted border-t-2 border-ink/15 leading-relaxed break-words">
                     {faq.a}
                   </div>
                 )}

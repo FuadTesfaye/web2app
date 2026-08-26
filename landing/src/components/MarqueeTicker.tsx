@@ -15,10 +15,10 @@ export default function MarqueeTicker() {
   ];
 
   return (
-    <div className="bg-accent-yellow border-b-3 border-ink font-mono text-xs sm:text-sm font-bold tracking-wider py-1.5 overflow-hidden select-none">
-      <div className="animate-marquee flex gap-8 items-center whitespace-nowrap">
+    <div className="bg-accent-yellow border-b-3 border-ink font-mono text-[11px] sm:text-xs md:text-sm font-bold tracking-wider py-1.5 overflow-hidden select-none w-full max-w-full">
+      <div className="animate-marquee flex gap-6 sm:gap-8 items-center whitespace-nowrap">
         {items.concat(items).map((item, idx) => (
-          <span key={idx} className="flex items-center gap-2">
+          <span key={idx} className="flex items-center gap-1.5 sm:gap-2">
             {item}
           </span>
         ))}

@@ -53,62 +53,62 @@ const testimonials: Testimonial[] = [
 
 export default function Testimonials() {
   return (
-    <section className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-t-3 border-ink bg-surface text-ink">
-      <div className="max-w-7xl mx-auto">
+    <section className="py-14 sm:py-20 lg:py-24 px-3 sm:px-6 lg:px-8 border-t-3 border-ink bg-surface text-ink w-full max-w-full">
+      <div className="max-w-7xl mx-auto w-full">
         
         {/* Header */}
-        <div className="text-center mb-12 sm:mb-16">
-          <div className="inline-block bg-accent-pink text-ink font-mono font-black text-xs px-3 py-1 border-2 border-ink shadow-neo-xs uppercase tracking-widest mb-3">
+        <div className="text-center mb-10 sm:mb-16">
+          <div className="inline-block bg-accent-pink text-ink font-mono font-black text-[10px] sm:text-xs px-3 py-1 border-2 border-ink shadow-neo-xs uppercase tracking-widest mb-3">
             [// 06 VERIFIED_REVIEWS]
           </div>
-          <h2 className="font-display font-black text-3xl sm:text-5xl uppercase tracking-tighter">
+          <h2 className="font-display font-black text-2xl xs:text-3xl sm:text-5xl uppercase tracking-tighter px-2">
             Loved By Engineers & Builders
           </h2>
-          <p className="font-sans font-bold text-base sm:text-lg text-ink-muted max-w-xl mx-auto mt-3">
+          <p className="font-sans font-bold text-xs sm:text-lg text-ink-muted max-w-xl mx-auto mt-2 sm:mt-3 px-2">
             See how developers are shipping multi-platform applications in record time.
           </p>
         </div>
 
         {/* Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {testimonials.map((t, idx) => (
             <div
               key={idx}
-              className="bg-surface border-3 border-ink p-6 sm:p-7 shadow-neo-md hover:shadow-neo-lg hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all flex flex-col justify-between"
+              className="bg-surface border-3 border-ink p-5 sm:p-6 lg:p-7 shadow-neo-sm sm:shadow-neo-md hover:shadow-neo-lg hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all flex flex-col justify-between"
             >
               <div>
                 {/* Rating & Badge */}
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-0.5">
+                <div className="flex items-center justify-between mb-3 sm:mb-4 gap-2">
+                  <div className="flex items-center gap-0.5 shrink-0">
                     {[...Array(t.rating)].map((_, i) => (
                       <Star
                         key={i}
-                        className="w-4 h-4 fill-accent-yellow text-ink stroke-[2]"
+                        className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-accent-yellow text-ink stroke-[2]"
                       />
                     ))}
                   </div>
-                  <span className={`px-2.5 py-0.5 border border-ink font-mono text-[10px] font-black uppercase tracking-wider ${t.tagColor}`}>
+                  <span className={`px-2 sm:px-2.5 py-0.5 border border-ink font-mono text-[9px] sm:text-[10px] font-black uppercase tracking-wider truncate ${t.tagColor}`}>
                     {t.badge}
                   </span>
                 </div>
 
                 {/* Review Text */}
-                <p className="font-sans font-semibold text-sm text-ink-muted leading-relaxed mb-6">
+                <p className="font-sans font-semibold text-xs sm:text-sm text-ink-muted leading-relaxed mb-4 sm:mb-6">
                   &ldquo;{t.text}&rdquo;
                 </p>
               </div>
 
               {/* Author Info */}
-              <div className="pt-4 border-t-2 border-ink/20 flex items-center gap-3">
-                <div className={`w-10 h-10 ${t.avatarBg} border-2 border-ink shadow-neo-xs flex items-center justify-center font-display font-black text-sm`}>
+              <div className="pt-3 sm:pt-4 border-t-2 border-ink/20 flex items-center gap-2.5 sm:gap-3">
+                <div className={`w-9 h-9 sm:w-10 sm:h-10 ${t.avatarBg} border-2 border-ink shadow-neo-xs flex items-center justify-center font-display font-black text-xs sm:text-sm shrink-0`}>
                   {t.avatarText}
                 </div>
-                <div>
-                  <h4 className="font-display font-black text-sm uppercase flex items-center gap-1">
-                    {t.name}
-                    <CheckCircle className="w-3.5 h-3.5 text-accent-green-dark inline fill-accent-green" />
+                <div className="min-w-0">
+                  <h4 className="font-display font-black text-xs sm:text-sm uppercase flex items-center gap-1 truncate">
+                    <span className="truncate">{t.name}</span>
+                    <CheckCircle className="w-3.5 h-3.5 text-accent-green-dark inline fill-accent-green shrink-0" />
                   </h4>
-                  <p className="font-mono text-xs text-ink-muted">
+                  <p className="font-mono text-[10px] sm:text-xs text-ink-muted truncate">
                     {t.role} • {t.company}
                   </p>
                 </div>

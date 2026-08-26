@@ -6,11 +6,12 @@
    ⚡ RAW ARCHITECTURAL NEOBRUTALISM MULTI-THEME ENGINE
    ========================================================================== */
 
-/* Universal Sharp Border Radius */
+/* Universal Sharp Border Radius & Box Sizing */
 *,
 *::before,
 *::after {
   border-radius: 0px !important;
+  box-sizing: border-box;
 }
 
 /* 1. Theme: Neo Retro (Classic Light) */
@@ -166,16 +167,20 @@
   --dot-opacity: 0.25;
 }
 
-/* Base Styles */
+/* Base Styles & Zero-Overflow Safeguards */
 html {
   scroll-behavior: smooth;
   background-color: var(--bg);
   color: var(--ink);
   transition: background-color 0.2s ease, color 0.2s ease;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 body {
   min-height: 100vh;
+  width: 100%;
+  max-width: 100vw;
   overflow-x: hidden;
   background-color: var(--bg);
   color: var(--ink);
@@ -196,7 +201,8 @@ body {
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
   background: var(--bg);
@@ -210,10 +216,25 @@ body {
   background: var(--accent-pink);
 }
 
+/* No Scrollbar Utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* Typographic Accents */
 .text-stroke {
   -webkit-text-stroke: 1.5px var(--ink);
   color: transparent;
+}
+
+/* Word break helper */
+.break-word-safe {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 /* Marquee Track Animation */
@@ -237,6 +258,7 @@ body {
   position: relative;
   transition: transform 0.1s ease, box-shadow 0.1s ease;
   user-select: none;
+  touch-action: manipulation;
 }
 
 .btn-sharp:hover {

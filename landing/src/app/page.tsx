@@ -16,11 +16,11 @@ import Footer from "@/components/Footer";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen flex flex-col justify-between">
-      <div>
+    <div className="min-h-screen flex flex-col justify-between w-full max-w-full overflow-x-hidden">
+      <div className="w-full max-w-full overflow-x-hidden">
         <MarqueeTicker />
         <Navbar />
-        <main>
+        <main className="w-full max-w-full overflow-x-hidden">
           <Hero />
           <ConverterStudio />
           <CliCommandBox />
