@@ -6,6 +6,24 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Fumadocs Theme Token Integration */
+:root {
+  --color-fd-background: var(--bg);
+  --color-fd-foreground: var(--ink);
+  --color-fd-muted: var(--surface-subtle);
+  --color-fd-muted-foreground: var(--ink-muted);
+  --color-fd-popover: var(--surface);
+  --color-fd-popover-foreground: var(--ink);
+  --color-fd-card: var(--surface);
+  --color-fd-card-foreground: var(--ink);
+  --color-fd-border: var(--border-color);
+  --color-fd-primary: var(--accent-yellow);
+  --color-fd-primary-foreground: var(--ink);
+  --color-fd-accent: var(--surface-subtle);
+  --color-fd-accent-foreground: var(--ink);
+  --color-fd-ring: var(--border-color);
+}
+
 /* ==========================================================================
    ⚡ RAW ARCHITECTURAL NEOBRUTALISM MULTI-THEME ENGINE
    ========================================================================== */
