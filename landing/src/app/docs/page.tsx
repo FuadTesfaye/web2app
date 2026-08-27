@@ -22,7 +22,9 @@ import {
   Link2,
   ChevronUp,
   Github,
-  Home
+  Home,
+  Bot,
+  Sparkles
 } from "lucide-react";
 import { playClick } from "@/lib/sound";
 
@@ -82,6 +84,7 @@ const categories: DocCategory[] = [
       { id: "cli-run", title: "web2app run" },
       { id: "cli-clean", title: "web2app clean" },
       { id: "cli-open", title: "web2app open" },
+      { id: "cli-skill", title: "web2app skill", badge: "AI" },
     ],
   },
   {
@@ -91,6 +94,15 @@ const categories: DocCategory[] = [
     items: [
       { id: "config-schema", title: "web2app.config.ts", badge: "Schema" },
       { id: "config-android", title: "Android Options" },
+    ],
+  },
+  {
+    id: "ai-skills",
+    title: "AI & Agent Integration",
+    icon: <Bot className="w-3.5 h-3.5 text-zinc-400" />,
+    items: [
+      { id: "ai-skill-guide", title: "AI Agent Skill (SKILL.md)", badge: "Antigravity" },
+      { id: "ai-prompt-recipes", title: "Prompt Recipes for AI", badge: "Copilot" },
     ],
   },
   {
@@ -1059,6 +1071,33 @@ export default nextConfig;`}
                 <CodeBlock code="web2app open android" language="bash" />
               </section>
 
+              {/* SECTION: CLI SKILL */}
+              <section id="cli-skill" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
+                <div className="group flex items-center gap-2 mb-2">
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">05.7 CLI Reference</span>
+                  <button 
+                    onClick={() => handleCopyLink("cli-skill")}
+                    className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
+                  >
+                    <Link2 className="w-3.5 h-3.5" />
+                  </button>
+                  {copiedLink === "cli-skill" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
+                </div>
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
+                  <code className="font-mono text-2xl">web2app skill</code>
+                </h2>
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                  Installs or exports the official AI Agent Skill (<code className="font-mono text-xs bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded">.agents/skills/web2app/SKILL.md</code>) so autonomous coding agents can package your web apps automatically:
+                </p>
+                <CodeBlock
+                  tabs={{
+                    "Install to Project": "npx web2app skill",
+                    "Print to Terminal": "npx web2app skill --print",
+                    "Custom Folder": "npx web2app skill -o .agent/skills/web2app",
+                  }}
+                />
+              </section>
+
               {/* ==========================================================================
                   CATEGORY 6: CONFIGURATION REFERENCE
                   ========================================================================== */}
@@ -1188,13 +1227,115 @@ export default {
               </section>
 
               {/* ==========================================================================
-                  CATEGORY 7: PRODUCTION & CI/CD
+                  CATEGORY 7: AI & AGENT INTEGRATION
+                  ========================================================================== */}
+
+              {/* SECTION: AI SKILL GUIDE */}
+              <section id="ai-skill-guide" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
+                <div className="group flex items-center gap-2 mb-2">
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">07.1 AI Integration</span>
+                  <button 
+                    onClick={() => handleCopyLink("ai-skill-guide")}
+                    className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
+                  >
+                    <Link2 className="w-3.5 h-3.5" />
+                  </button>
+                  {copiedLink === "ai-skill-guide" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
+                </div>
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4 flex items-center gap-2.5">
+                  <Bot className="w-6 h-6 text-zinc-700 dark:text-zinc-300" />
+                  <span>AI Agent Skill (Antigravity & Claude Code)</span>
+                </h2>
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                  web2app ships with an official <strong className="text-zinc-900 dark:text-zinc-100 font-semibold">AI Skill definition</strong> formatted for Google Antigravity, Claude Code, Cursor, Windsurf, Copilot, and LLM coding agents.
+                </p>
+
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                  By adding the skill to your project, your AI coding assistant learns how to automatically detect frameworks, configure static exports, diagnose Java/Android environments, and compile multi-platform native packages with zero trial-and-error.
+                </p>
+
+                <DocsCallout type="tip" title="1-Second 1-Command Skill Installation">
+                  Run this command in any web repository to equip your AI agent with the web2app skill:
+                  <div className="mt-2 font-mono font-semibold text-zinc-900 dark:text-zinc-100">npx web2app skill</div>
+                </DocsCallout>
+
+                <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-4 mb-2 font-medium">
+                  The skill is saved at <code className="bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded font-mono text-xs">.agents/skills/web2app/SKILL.md</code>:
+                </p>
+
+                <CodeBlock
+                  code={`---
+name: web2app
+description: >-
+  Build, convert, and package web applications (Next.js, Vite, React, Vue, Svelte, Python, Streamlit, Flask, FastAPI) or live web URLs into standalone native Android (APK/AAB), Windows Desktop (WebView2), Debian/Ubuntu (.deb), and Arch Linux (PKGBUILD) apps with zero runtime bloat. Use whenever the user mentions converting a web app to mobile or desktop, compiling an Android APK, testing on Android emulators/devices, generating .deb packages, running web2app doctor/diagnostics, or configuring web2app.config.ts.
+---
+
+# web2app AI Assistant Skill
+
+Transform modern web applications and live URLs into native, lightweight, standalone mobile and desktop packages using operating system native WebViews (AndroidX WebKit, Microsoft Edge WebView2, Linux WebKit/XDG).`}
+                  language="markdown"
+                  title=".agents/skills/web2app/SKILL.md"
+                />
+              </section>
+
+              {/* SECTION: AI PROMPT RECIPES */}
+              <section id="ai-prompt-recipes" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
+                <div className="group flex items-center gap-2 mb-2">
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">07.2 AI Integration</span>
+                  <button 
+                    onClick={() => handleCopyLink("ai-prompt-recipes")}
+                    className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
+                  >
+                    <Link2 className="w-3.5 h-3.5" />
+                  </button>
+                  {copiedLink === "ai-prompt-recipes" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
+                </div>
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4 flex items-center gap-2.5">
+                  <Sparkles className="w-6 h-6 text-zinc-700 dark:text-zinc-300" />
+                  <span>Prompt Recipes for AI Assistants</span>
+                </h2>
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                  You can copy and paste any of these sample natural language prompts to your AI assistant:
+                </p>
+
+                <div className="space-y-4 my-6">
+                  <div className="p-4 bg-zinc-50/80 dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 rounded-xl">
+                    <div className="flex items-center gap-2 text-xs font-mono font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">
+                      <span>Prompt: Convert Next.js to Android & Windows</span>
+                    </div>
+                    <p className="text-sm font-sans text-zinc-900 dark:text-zinc-100 bg-white dark:bg-zinc-950 p-3 rounded-lg border border-zinc-200 dark:border-zinc-800 font-mono">
+                      &quot;Please install the web2app AI skill, configure my Next.js app for static export in next.config.mjs, run web2app doctor to check my build tools, and compile standalone Android APK and Windows desktop packages.&quot;
+                    </p>
+                  </div>
+
+                  <div className="p-4 bg-zinc-50/80 dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 rounded-xl">
+                    <div className="flex items-center gap-2 text-xs font-mono font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">
+                      <span>Prompt: Convert Live Web App / PWA</span>
+                    </div>
+                    <p className="text-sm font-sans text-zinc-900 dark:text-zinc-100 bg-white dark:bg-zinc-950 p-3 rounded-lg border border-zinc-200 dark:border-zinc-800 font-mono">
+                      &quot;Use web2app to convert https://app.myservice.com into native Android APK and Debian packages with the app name &apos;My Service&apos; and package ID com.myservice.app.&quot;
+                    </p>
+                  </div>
+
+                  <div className="p-4 bg-zinc-50/80 dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 rounded-xl">
+                    <div className="flex items-center gap-2 text-xs font-mono font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">
+                      <span>Prompt: Configure Android Permissions & Landscape Lock</span>
+                    </div>
+                    <p className="text-sm font-sans text-zinc-900 dark:text-zinc-100 bg-white dark:bg-zinc-950 p-3 rounded-lg border border-zinc-200 dark:border-zinc-800 font-mono">
+                      &quot;Create a web2app.config.ts file that locks orientation to landscape, requests CAMERA and ACCESS_FINE_LOCATION permissions, and builds the Android debug APK.&quot;
+                    </p>
+                  </div>
+                </div>
+              </section>
+
+              {/* ==========================================================================
+                  CATEGORY 8: PRODUCTION & CI/CD
                   ========================================================================== */}
 
               {/* SECTION: KEYSTORE */}
               <section id="android-keystore" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">07.1 Production</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">08.1 Production</span>
                   <button 
                     onClick={() => handleCopyLink("android-keystore")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
@@ -1236,7 +1377,7 @@ export default {
               {/* SECTION: CI/CD */}
               <section id="ci-cd" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">07.2 Automation</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">08.2 Automation</span>
                   <button 
                     onClick={() => handleCopyLink("ci-cd")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
@@ -1283,7 +1424,7 @@ jobs:
               {/* SECTION: TROUBLESHOOTING */}
               <section id="troubleshooting" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">07.3 Support</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">08.3 Support</span>
                   <button 
                     onClick={() => handleCopyLink("troubleshooting")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"

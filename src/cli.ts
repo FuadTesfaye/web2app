@@ -5,6 +5,7 @@ import { doctorCommand } from "./commands/doctor.js";
 import { initCommand } from "./commands/init.js";
 import { openCommand } from "./commands/open.js";
 import { runCommand } from "./commands/run.js";
+import { skillCommand } from "./commands/skill.js";
 import { CLI_DESCRIPTION, CLI_NAME, CLI_VERSION } from "./constants.js";
 import { Logger } from "./utils/logger.js";
 
@@ -85,9 +86,19 @@ program
     await openCommand(platform);
   });
 
+program
+  .command("skill")
+  .description("Install or export the AI Agent Skill definition (.agents/skills/web2app/SKILL.md)")
+  .option("-o, --out <dir>", "Custom output directory (default: .agents/skills/web2app)")
+  .option("-f, --force", "Overwrite existing skill file")
+  .option("-p, --print", "Print SKILL.md content to standard output")
+  .action(async (options) => {
+    await skillCommand(options);
+  });
+
 // Handle direct invocation like `web2app https://example.com` or `web2app`
 const args = process.argv.slice(2);
-const knownCommands = ["init", "build", "doctor", "clean", "run", "open", "-v", "--version", "-h", "--help"];
+const knownCommands = ["init", "build", "doctor", "clean", "run", "open", "skill", "-v", "--version", "-h", "--help"];
 
 if (args.length > 0 && !knownCommands.includes(args[0]) && !args[0].startsWith("-")) {
   // Argument is a URL or custom platform/path
