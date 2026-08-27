@@ -413,10 +413,17 @@ export default function DocsPage() {
                   {copiedLink === "installation" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
                 </div>
                 <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
-                  Global CLI Installation
+                  Installation & Script Runner Setup
                 </h2>
                 <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
-                  To use the <code className="bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 px-1.5 py-0.5 rounded-md font-mono text-xs border border-zinc-200 dark:border-zinc-700">web2app</code> command anywhere in your terminal, install it globally via your favorite package manager:
+                  web2app can be used as a <strong>global CLI</strong>, an <strong>npm devDependency</strong> with automated scripts in your <code className="bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded font-mono text-xs">package.json</code>, or executed instantly via <code className="bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded font-mono text-xs">npx</code>.
+                </p>
+
+                <h3 className="font-semibold text-base text-zinc-900 dark:text-zinc-100 mt-6 mb-2">
+                  1. Global Installation (Recommended for Terminal Users)
+                </h3>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-3">
+                  Install globally to execute <code className="font-mono text-xs bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded">web2app</code> anywhere across your filesystem:
                 </p>
 
                 <CodeBlock
@@ -428,11 +435,51 @@ export default function DocsPage() {
                   }}
                 />
 
-                <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-4">
-                  After installation, verify that the CLI is ready:
+                <h3 className="font-semibold text-base text-zinc-900 dark:text-zinc-100 mt-6 mb-2">
+                  2. Project DevDependency & NPM Scripts
+                </h3>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-3">
+                  Add web2app directly to your project dependencies so teammates and CI/CD pipelines can run automated build scripts:
                 </p>
 
-                <CodeBlock code="web2app --version" language="bash" />
+                <CodeBlock code="npm install -D web2app" language="bash" />
+
+                <p className="text-sm text-zinc-600 dark:text-zinc-400 my-3">
+                  Add these standard script targets to your <code className="bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded font-mono text-xs">package.json</code>:
+                </p>
+
+                <CodeBlock
+                  code={`{
+  "scripts": {
+    "app:build": "web2app build",
+    "app:android": "web2app build android",
+    "app:windows": "web2app build windows",
+    "app:debian": "web2app build debian",
+    "app:arch": "web2app build arch",
+    "app:doctor": "web2app doctor",
+    "app:run": "web2app run android"
+  }
+}`}
+                  language="json"
+                  title="package.json"
+                />
+
+                <h3 className="font-semibold text-base text-zinc-900 dark:text-zinc-100 mt-6 mb-2">
+                  3. Local Contributor Linking
+                </h3>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-3">
+                  To develop web2app or link a local checkout globally on your system:
+                </p>
+
+                <CodeBlock
+                  code={`git clone https://github.com/FuadTesfaye/web2app.git
+cd web2app
+npm install
+npm run build
+npm link`}
+                  language="bash"
+                  title="Terminal"
+                />
               </section>
 
               {/* SECTION: INIT WIZARD */}

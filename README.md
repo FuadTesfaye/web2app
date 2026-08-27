@@ -1,7 +1,8 @@
 # ⚡ web2app
 
-> Convert Next.js, web applications, and live web pages into native multi-platform apps (**Android**, **Windows**, **Debian**, **Arch Linux**) with a single command.
+> Transform Next.js, Vite, React, Vue, Svelte, Python, or any live web URL into native multi-platform apps (**Android**, **Windows**, **Debian**, **Arch Linux**) with zero runtime bloat.
 
+[![npm version](https://img.shields.io/npm/v/web2app.svg?color=blue)](https://www.npmjs.com/package/web2app)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -9,79 +10,155 @@
 
 ## 🚀 Why web2app?
 
-Most desktop/mobile wrappers (like Capacitor or Electron boilerplate) introduce complex runtimes, high memory footprint, and multi-platform configuration headaches.
+Traditional hybrid frameworks (like Electron) bundle a 150MB+ Chromium binary, Node.js runtime, and high idle memory consumption.
 
-**`web2app` makes converting any web page or web app fast, clean, and universal:**  
-It takes your web application (Next.js, Vite, React, static HTML) or a live web URL, bundles it into clean native wrappers, and generates a structured `app/` folder containing ready-to-run/install packages for all major platforms:
+**`web2app` compiles directly to operating system native WebViews:**  
+It takes your web application (Next.js, Vite, React, Vue, Python) or a live web URL, bundles it into clean native wrappers, and generates a structured `app/` folder containing standalone installable packages for all major platforms:
 
 ```
-Web Page or Web App
-        ↓
-  web2app build
-        ↓
+Web App / Framework / Live URL
+              ↓
+        web2app build
+              ↓
 app/
-├── android/   → Android Kotlin Project & Standalone APK
+├── android/   → Android Kotlin Project & Standalone APK (.apk / .aab)
 ├── windows/   → Windows Desktop App, Launchers (Edge/WebView2) & Installers
-├── debian/    → Debian / Ubuntu .deb Package & Desktop Entry
+├── debian/    → Debian / Ubuntu .deb Binary Package & Desktop Entry
 └── arch/      → Arch Linux PKGBUILD, .SRCINFO & Launcher
 ```
 
 ---
 
-## 📦 Quick Start
+## 📦 Installation & Usage
 
-### Option A: Convert Any Web Page URL Directly
+`web2app` can be run globally, locally as a devDependency in your `package.json`, or instantly via `npx`:
+
+### 1. Global Installation (Recommended for Terminal Power Users)
+Install `web2app` globally with your favorite package manager:
+
 ```bash
+# npm
+npm install -g web2app
+
+# pnpm
+pnpm add -g web2app
+
+# yarn
+yarn global add web2app
+
+# bun
+bun add -g web2app
+```
+
+Now you can run `web2app` anywhere in any directory:
+```bash
+web2app build
+web2app https://news.ycombinator.com
+web2app doctor
+```
+
+---
+
+### 2. Zero-Install Instant Runner (`npx`)
+Run commands directly without installing anything globally:
+
+```bash
+# Convert any live website URL into native packages
 npx web2app https://news.ycombinator.com
-```
-Instantly produces your native packages in `./app/` for Android, Windows, Debian, and Arch Linux!
 
-### Option B: Convert a Local Web Project (Next.js, Vite, React, HTML)
-```bash
-# 1. Initialize Configuration (optional)
-npx web2app init
-
-# 2. Build for all platforms (creates app/android, app/windows, app/debian, app/arch)
+# Build current web project into native Android, Windows, Debian, and Arch apps
 npx web2app build
+
+# Run environment diagnostics
+npx web2app doctor
+
+# Install AI Agent Skill for Antigravity & Claude Code
+npx web2app skill
 ```
+
+---
+
+### 3. Local Project DevDependency & NPM Scripts
+Add `web2app` to your repository so your team and CI/CD pipelines can run automated build scripts:
+
+```bash
+npm install -D web2app
+```
+
+Add these scripts to your `package.json`:
+```json
+{
+  "scripts": {
+    "app:build": "web2app build",
+    "app:android": "web2app build android",
+    "app:windows": "web2app build windows",
+    "app:debian": "web2app build debian",
+    "app:arch": "web2app build arch",
+    "app:run": "web2app run android",
+    "app:doctor": "web2app doctor"
+  }
+}
+```
+
+Then simply execute:
+```bash
+npm run app:build
+```
+
+---
+
+### 4. Local Contributor Linking (`npm link`)
+To develop or customize `web2app` locally on your machine:
+
+```bash
+git clone https://github.com/FuadTesfaye/web2app.git
+cd web2app
+npm install
+npm run build
+npm link
+```
+
+---
+
+## 🤖 AI Agent Skill (Antigravity, Cursor, Claude Code)
+
+`web2app` includes an official AI Agent Skill definition. To equip your autonomous coding assistant with complete knowledge of `web2app`, run:
+
+```bash
+npx web2app skill
+```
+
+This creates `.agents/skills/web2app/SKILL.md` in your project so AI assistants can automatically detect frameworks, configure static exports, and compile multi-platform apps.
 
 ---
 
 ## 📁 Output Directory Structure
 
-When running `web2app build` or converting any web page, `web2app` creates a root directory named `app` with dedicated subdirectories for each platform:
-
 ```
 app/
 ├── android/
-│   ├── app-debug.apk                  # Compiled Android APK (if SDK available)
+│   ├── app-debug.apk                  # Compiled Android APK
 │   ├── app/src/main/                  # Kotlin source & AndroidManifest
 │   └── gradlew                        # Ready to open in Android Studio
 ├── windows/
 │   ├── launch.bat                     # Windows Batch Launcher (Edge App Mode)
 │   ├── launch.ps1                     # PowerShell Runner
-│   ├── start.vbs                      # Silent launcher (no command prompt)
-│   ├── install.bat / install.ps1      # Creates Desktop & Start Menu shortcuts
-│   ├── app.manifest / app.config.json # Manifest & Window Config
-│   └── assets/                        # Bundled static web files
+│   ├── start.vbs                      # Silent background launcher
+│   ├── install.bat / install.ps1      # Creates Start Menu shortcuts
+│   └── app.manifest                   # Manifest & Window Configuration
 ├── debian/
 │   ├── <app-name>_<ver>_all.deb       # Standalone Debian/Ubuntu binary package
 │   ├── DEBIAN/control                 # Package control metadata
-│   └── usr/
-│       ├── bin/<app-id>               # Linux executable launcher
-│       ├── share/applications/*.desktop # Linux desktop shortcut
-│       └── share/icons/               # App icon
+│   └── usr/share/applications/*.desktop # Linux desktop launcher
 └── arch/
     ├── PKGBUILD                       # Arch AUR-compatible build script
     ├── .SRCINFO                       # Arch package metadata
-    ├── <app-id>.desktop               # Desktop entry
-    ├── install.sh                     # Installation script (makepkg -si)
-    └── <app-id>                       # Executable launcher
+    └── install.sh                     # Automated installation script
 ```
 
 ---
 
-## 🛠️ Commands Reference
+## 🛠️ CLI Commands
 
 | Command | Description |
 |---|---|
@@ -93,26 +170,11 @@ app/
 | `web2app clean` | Cleans `.web2app/` work directory and `app/` build outputs |
 | `web2app run android` | Installs and launches the application on a connected Android device or emulator |
 | `web2app open android` | Opens the generated native Android project in Android Studio |
-
-### Build Options
-```bash
-npx web2app build [platformOrUrl] [options]
-
-Options:
-  -u, --url <url>        Convert a live web page URL into apps
-  -r, --release          Build release APK / package
-  -b, --bundle           Build Android App Bundle (.aab)
-  --skip-web-build       Skip web build step and use existing dist/out assets
-  -c, --clean            Clean native wrapper before building
-  -o, --out <dir>        Custom output directory (default: app)
-  --verbose              Show detailed build logs
-```
+| `web2app skill` | Installs or exports the AI Agent Skill definition (`.agents/skills/web2app/SKILL.md`) |
 
 ---
 
-## 🌐 Next.js Configuration
-
-For local on-device execution inside standalone apps, Next.js must be configured with static HTML export (`output: 'export'`):
+## 🌐 Next.js Static Export Configuration
 
 ```typescript
 // next.config.ts / next.config.mjs
@@ -121,7 +183,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   output: "export",
   images: {
-    unoptimized: true, // Required for static export
+    unoptimized: true, // Required for offline native assets
   },
 };
 
@@ -132,17 +194,15 @@ export default nextConfig;
 
 ## 📋 Requirements
 
-- **Node.js**: >= 18.0.0
+- **Node.js**: `>= 18.0.0`
 - **Platforms**:
-  - **Android**: Java JDK 17/21 + Android SDK (optional for packaging; project wrapper is always exported)
+  - **Android**: Java JDK 17/21 + Android SDK (optional for packaging; native wrapper is always exported)
   - **Windows**: Microsoft Edge or Chromium (available on all Windows 10/11 systems)
-  - **Debian / Ubuntu**: `bash`, `xdg-utils` (packages built via pure TypeScript engine)
-  - **Arch Linux**: `bash`, `xdg-utils` (AUR `makepkg` compatible)
-
-Run `npx web2app doctor` at any time to verify your environment setup!
+  - **Debian / Ubuntu**: Pure TypeScript packaging engine (no `dpkg` required to build)
+  - **Arch Linux**: `makepkg -si` compatible
 
 ---
 
 ## 📄 License
 
-MIT © 2026
+MIT © 2026 Fuad Tesfaye

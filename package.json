@@ -1,37 +1,68 @@
 {
   "name": "web2app",
   "version": "0.1.0",
-  "description": "Convert Next.js and web applications into native Android apps with a single command.",
+  "description": "Convert Next.js, React, Vite, Vue, Svelte, Python, and live web URLs into standalone native Android, Windows, Debian, and Arch apps with zero runtime overhead.",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "bin": {
     "web2app": "./bin/web2app.js"
   },
   "files": [
     "dist",
     "bin",
-    "templates"
+    "templates",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
+    "prepack": "npm run build",
+    "prepublishOnly": "npm run typecheck && npm test && npm run build",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FuadTesfaye/web2app.git"
+  },
+  "homepage": "https://github.com/FuadTesfaye/web2app#readme",
+  "bugs": {
+    "url": "https://github.com/FuadTesfaye/web2app/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
-    "nextjs",
-    "android",
-    "webview",
-    "mobile",
-    "cli",
     "web2app",
-    "apk",
-    "build"
+    "nextjs-to-apk",
+    "nextjs",
+    "react",
+    "vite",
+    "pwa",
+    "android",
+    "webview2",
+    "windows",
+    "debian",
+    "arch-linux",
+    "mobile",
+    "desktop",
+    "cli",
+    "ai-skill",
+    "native-compiler"
   ],
-  "author": "",
+  "author": "Fuad Tesfaye",
   "license": "MIT",
   "dependencies": {
     "commander": "^12.1.0",
