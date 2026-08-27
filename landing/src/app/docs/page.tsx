@@ -1,9 +1,6 @@
 "use client";
 
 import React, { useState, useMemo, useEffect } from "react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import MarqueeTicker from "@/components/MarqueeTicker";
 import DocsSidebar, { DocCategory } from "@/components/docs/DocsSidebar";
 import DocsSearch from "@/components/docs/DocsSearch";
 import CodeBlock from "@/components/docs/CodeBlock";
@@ -24,11 +21,8 @@ import {
   Disc,
   Link2,
   ChevronUp,
-  ExternalLink,
-  CheckCircle2,
-  Zap,
-  Box,
-  Compass
+  Github,
+  Home
 } from "lucide-react";
 import { playClick } from "@/lib/sound";
 
@@ -36,7 +30,7 @@ const categories: DocCategory[] = [
   {
     id: "getting-started",
     title: "Getting Started",
-    icon: <Rocket className="w-3.5 h-3.5 text-zinc-500" />,
+    icon: <Rocket className="w-3.5 h-3.5 text-zinc-400" />,
     items: [
       { id: "intro", title: "Introduction", badge: "Overview" },
       { id: "quick-start", title: "Quick Start", badge: "10s" },
@@ -47,7 +41,7 @@ const categories: DocCategory[] = [
   {
     id: "architecture",
     title: "Core Architecture",
-    icon: <Cpu className="w-3.5 h-3.5 text-zinc-500" />,
+    icon: <Cpu className="w-3.5 h-3.5 text-zinc-400" />,
     items: [
       { id: "zero-bloat", title: "Zero Runtime Bloat", badge: "vs Electron" },
       { id: "output-structure", title: "app/ Directory Tree" },
@@ -58,7 +52,7 @@ const categories: DocCategory[] = [
   {
     id: "platforms",
     title: "Target Platforms",
-    icon: <Layers className="w-3.5 h-3.5 text-zinc-500" />,
+    icon: <Layers className="w-3.5 h-3.5 text-zinc-400" />,
     items: [
       { id: "platform-android", title: "Android APK & AAB", badge: "Kotlin" },
       { id: "platform-windows", title: "Windows Desktop", badge: "Edge / Webview2" },
@@ -69,7 +63,7 @@ const categories: DocCategory[] = [
   {
     id: "frameworks",
     title: "Framework Recipes",
-    icon: <Code2 className="w-3.5 h-3.5 text-zinc-500" />,
+    icon: <Code2 className="w-3.5 h-3.5 text-zinc-400" />,
     items: [
       { id: "framework-nextjs", title: "Next.js (App / Pages)", badge: "Static" },
       { id: "framework-vite", title: "Vite / React / Vue / Svelte" },
@@ -80,7 +74,7 @@ const categories: DocCategory[] = [
   {
     id: "cli-reference",
     title: "CLI Reference",
-    icon: <Terminal className="w-3.5 h-3.5 text-zinc-500" />,
+    icon: <Terminal className="w-3.5 h-3.5 text-zinc-400" />,
     items: [
       { id: "cli-build", title: "web2app build" },
       { id: "cli-init", title: "web2app init" },
@@ -93,7 +87,7 @@ const categories: DocCategory[] = [
   {
     id: "config-reference",
     title: "Configuration",
-    icon: <Settings className="w-3.5 h-3.5 text-zinc-500" />,
+    icon: <Settings className="w-3.5 h-3.5 text-zinc-400" />,
     items: [
       { id: "config-schema", title: "web2app.config.ts", badge: "Schema" },
       { id: "config-android", title: "Android Options" },
@@ -102,7 +96,7 @@ const categories: DocCategory[] = [
   {
     id: "production",
     title: "Production & CI/CD",
-    icon: <ShieldCheck className="w-3.5 h-3.5 text-zinc-500" />,
+    icon: <ShieldCheck className="w-3.5 h-3.5 text-zinc-400" />,
     items: [
       { id: "android-keystore", title: "Release Signing & Keystores" },
       { id: "ci-cd", title: "GitHub Actions CI/CD" },
@@ -158,7 +152,7 @@ export default function DocsPage() {
         .map((item) => document.getElementById(item.id))
         .filter((el): el is HTMLElement => el !== null);
 
-      const scrollPosition = window.scrollY + 160;
+      const scrollPosition = window.scrollY + 140;
 
       for (let i = sectionElements.length - 1; i >= 0; i--) {
         const el = sectionElements[i];
@@ -177,7 +171,7 @@ export default function DocsPage() {
     setActiveSection(id);
     const elem = document.getElementById(id);
     if (elem) {
-      const yOffset = -90;
+      const yOffset = -80;
       const y = elem.getBoundingClientRect().top + window.pageYOffset + yOffset;
       window.scrollTo({ top: y, behavior: "smooth" });
     }
@@ -197,62 +191,85 @@ export default function DocsPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between w-full max-w-full bg-[#FAFAFA] dark:bg-[#090D16] text-zinc-900 dark:text-zinc-100 antialiased selection:bg-blue-500/20 selection:text-blue-900 dark:selection:text-blue-200">
-      <div className="w-full max-w-full">
-        <MarqueeTicker />
-        <Navbar />
-
-        {/* Docs Subheader Breadcrumb & Mobile Bar */}
-        <div className="bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md border-b border-zinc-200/80 dark:border-zinc-800/80 px-4 sm:px-8 py-3 flex items-center justify-between gap-3 sticky top-[57px] sm:top-[65px] z-30 shadow-2xs">
-          <div className="flex items-center gap-2 font-sans text-xs font-medium text-zinc-500 dark:text-zinc-400 truncate">
-            <span className="hidden sm:inline">Docs</span>
-            <span className="hidden sm:inline text-zinc-300 dark:text-zinc-700">/</span>
-            <span className="text-zinc-900 dark:text-zinc-100 font-semibold truncate flex items-center gap-1.5">
-              <Compass className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
-              {allDocItems.find((i) => i.id === activeSection)?.title || "Documentation"}
+    <div className="min-h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans antialiased">
+      
+      {/* Top Header - Fixed at Top */}
+      <header className="sticky top-0 z-50 h-14 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 px-4 sm:px-8 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <a 
+            href="/"
+            onClick={playClick}
+            className="flex items-center gap-2 font-display font-black text-lg tracking-tight uppercase text-zinc-900 dark:text-white hover:opacity-80 transition-opacity"
+          >
+            <span className="w-7 h-7 rounded-lg bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 flex items-center justify-center font-bold text-sm">
+              ⚡
             </span>
-          </div>
-
-          <div className="flex items-center gap-2 shrink-0">
-            <button
-              onClick={() => {
-                setMobileSidebarOpen(!mobileSidebarOpen);
-                playClick();
-              }}
-              className="lg:hidden px-3 py-1.5 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-900 dark:text-zinc-100 rounded-lg font-sans text-xs font-semibold flex items-center gap-1.5 transition-colors border border-zinc-200 dark:border-zinc-700"
-            >
-              <Menu className="w-3.5 h-3.5" />
-              <span>Menu</span>
-            </button>
-          </div>
+            <span>web2app</span>
+          </a>
+          <span className="text-zinc-300 dark:text-zinc-700 hidden sm:inline">/</span>
+          <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400 hidden sm:inline">
+            Docs
+          </span>
         </div>
 
-        {/* Main Docs Content Layout */}
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-start w-full px-4 sm:px-6 lg:px-8 py-6 gap-8">
-          
-          {/* Left Sidebar */}
-          <DocsSidebar
-            categories={categories}
-            activeId={activeSection}
-            onSelect={handleSelectSection}
-            isOpenMobile={mobileSidebarOpen}
-            onCloseMobile={() => setMobileSidebarOpen(false)}
-          />
+        <div className="flex items-center gap-2 sm:gap-3">
+          <a
+            href="/"
+            onClick={playClick}
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+          >
+            <Home className="w-3.5 h-3.5" />
+            <span>Home</span>
+          </a>
+          <a
+            href="https://github.com/FuadTesfaye/web2app"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={playClick}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors border border-zinc-200 dark:border-zinc-800"
+          >
+            <Github className="w-3.5 h-3.5" />
+            <span className="hidden xs:inline">GitHub</span>
+          </a>
+          <button
+            onClick={() => {
+              setMobileSidebarOpen(!mobileSidebarOpen);
+              playClick();
+            }}
+            className="lg:hidden p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
+            aria-label="Toggle navigation menu"
+          >
+            <Menu className="w-4 h-4" />
+          </button>
+        </div>
+      </header>
 
-          {/* Center Main Content Area */}
-          <main className="flex-1 min-w-0 max-w-full lg:max-w-3xl py-2">
+      {/* Docs Body Layout: Fixed Sidebars + Only Content Scrolls */}
+      <div className="w-full relative">
+        
+        {/* Fixed Left Navigation Sidebar */}
+        <DocsSidebar
+          categories={categories}
+          activeId={activeSection}
+          onSelect={handleSelectSection}
+          isOpenMobile={mobileSidebarOpen}
+          onCloseMobile={() => setMobileSidebarOpen(false)}
+        />
+
+        {/* Center Main Scrollable Content */}
+        <div className="lg:pl-72 xl:pr-64 w-full">
+          <main className="max-w-3xl mx-auto px-6 sm:px-10 py-10">
             
-            {/* Header section */}
-            <div className="mb-10 pb-8 border-b border-zinc-200/80 dark:border-zinc-800/80">
-              <div className="inline-flex items-center gap-1.5 bg-zinc-100 dark:bg-zinc-800/80 text-zinc-700 dark:text-zinc-300 font-mono text-[11px] font-medium px-2.5 py-1 rounded-full border border-zinc-200 dark:border-zinc-700 mb-3">
-                <Box className="w-3 h-3 text-blue-600 dark:text-blue-400" />
-                <span>v0.1.0 Documentation</span>
+            {/* Header / Intro */}
+            <div className="mb-10 pb-8 border-b border-zinc-200 dark:border-zinc-800">
+              <div className="inline-flex items-center gap-1.5 bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 font-mono text-[11px] font-medium px-2.5 py-0.5 rounded-md border border-zinc-200 dark:border-zinc-700 mb-3">
+                <span>Documentation & Reference</span>
               </div>
               <h1 className="font-sans font-extrabold text-3xl sm:text-4xl text-zinc-900 dark:text-white tracking-tight leading-tight">
-                web2app Documentation
+                web2app Manual
               </h1>
-              <p className="font-sans text-base sm:text-[17px] text-zinc-600 dark:text-zinc-400 mt-3 leading-relaxed">
-                A high-performance CLI compiler and packaging engine to convert web applications and live URLs into native standalone Android, Windows, Debian, and Arch packages.
+              <p className="text-base sm:text-[17px] text-zinc-600 dark:text-zinc-400 mt-3 leading-relaxed">
+                Transform web applications and live URLs into native standalone Android, Windows, Debian, and Arch packages with zero runtime overhead.
               </p>
 
               {/* Real-time search bar */}
@@ -263,10 +280,10 @@ export default function DocsPage() {
               />
             </div>
 
-            {/* If search query has results */}
+            {/* Quick search filter results */}
             {searchQuery.trim() !== "" && (
-              <div className="mb-10 p-4 bg-white dark:bg-zinc-900/90 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-xs">
-                <div className="font-sans text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mb-3">
+              <div className="mb-10 p-4 bg-zinc-50 dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800">
+                <div className="text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mb-3">
                   Matching Topics ({filteredItems.length}):
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -277,13 +294,13 @@ export default function DocsPage() {
                         handleSelectSection(item.id);
                         playClick();
                       }}
-                      className="p-3 bg-zinc-50 dark:bg-zinc-800/60 hover:bg-blue-50/50 dark:hover:bg-zinc-800 border border-zinc-200/80 dark:border-zinc-700/80 rounded-xl text-left font-sans transition-all flex items-center justify-between group"
+                      className="p-3 bg-white dark:bg-zinc-800/80 hover:border-zinc-400 dark:hover:border-zinc-600 border border-zinc-200 dark:border-zinc-700 rounded-lg text-left transition-all flex items-center justify-between group"
                     >
                       <div className="min-w-0">
-                        <span className="text-[11px] text-zinc-400 dark:text-zinc-500 block uppercase font-medium">{item.categoryTitle}</span>
-                        <span className="font-semibold text-sm text-zinc-800 dark:text-zinc-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 truncate block mt-0.5">{item.title}</span>
+                        <span className="text-[10px] text-zinc-400 dark:text-zinc-500 block uppercase font-medium">{item.categoryTitle}</span>
+                        <span className="font-semibold text-sm text-zinc-800 dark:text-zinc-200 group-hover:text-zinc-950 dark:group-hover:text-white truncate block mt-0.5">{item.title}</span>
                       </div>
-                      <ArrowRight className="w-4 h-4 text-zinc-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 shrink-0 ml-2 transition-colors" />
+                      <ArrowRight className="w-4 h-4 text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-white shrink-0 ml-2 transition-colors" />
                     </button>
                   ))}
                 </div>
@@ -291,14 +308,14 @@ export default function DocsPage() {
             )}
 
             {/* ==========================================================================
-                DOCUMENTATION SECTIONS
+                DOCUMENTATION SECTIONS (STRICTLY MONOCHROME / BASE COLORING)
                 ========================================================================== */}
             <div className="space-y-16">
               
               {/* SECTION: INTRO */}
-              <section id="intro" className="scroll-mt-28">
+              <section id="intro" className="scroll-mt-20">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">01.1 Overview</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">01.1 Overview</span>
                   <button 
                     onClick={() => handleCopyLink("intro")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
@@ -306,12 +323,12 @@ export default function DocsPage() {
                   >
                     <Link2 className="w-3.5 h-3.5" />
                   </button>
-                  {copiedLink === "intro" && <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">Copied link!</span>}
+                  {copiedLink === "intro" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
                 </div>
-                <h2 className="font-sans font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
                   What is web2app?
                 </h2>
-                <p className="font-sans text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
                   <strong className="font-semibold text-zinc-900 dark:text-zinc-100">web2app</strong> is a modern, high-performance CLI compiler and packaging engine designed to transform web applications (Next.js, Vite, React, Vue, Python) or any live web URL into native, standalone desktop and mobile applications with <strong>zero runtime bloat</strong>.
                 </p>
 
@@ -320,40 +337,40 @@ export default function DocsPage() {
                 </DocsCallout>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 my-6">
-                  <div className="p-4 bg-white dark:bg-zinc-900/70 border border-zinc-200/80 dark:border-zinc-800 rounded-xl shadow-2xs">
-                    <span className="text-xs font-mono font-medium text-emerald-600 dark:text-emerald-400">Bundle Footprint</span>
-                    <h4 className="font-sans font-bold text-xl text-zinc-900 dark:text-zinc-100 mt-1">~4 KB – 1 MB</h4>
+                  <div className="p-4 bg-zinc-50/70 dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 rounded-xl">
+                    <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">Bundle Footprint</span>
+                    <h4 className="font-bold text-xl text-zinc-900 dark:text-zinc-100 mt-1">~4 KB – 1 MB</h4>
                     <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">Over 99% smaller than typical Electron builds.</p>
                   </div>
-                  <div className="p-4 bg-white dark:bg-zinc-900/70 border border-zinc-200/80 dark:border-zinc-800 rounded-xl shadow-2xs">
-                    <span className="text-xs font-mono font-medium text-blue-600 dark:text-blue-400">Compile Speed</span>
-                    <h4 className="font-sans font-bold text-xl text-zinc-900 dark:text-zinc-100 mt-1">~1.4 Seconds</h4>
+                  <div className="p-4 bg-zinc-50/70 dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 rounded-xl">
+                    <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">Compile Speed</span>
+                    <h4 className="font-bold text-xl text-zinc-900 dark:text-zinc-100 mt-1">~1.4 Seconds</h4>
                     <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">Pure TypeScript packager engine with zero native dependencies.</p>
                   </div>
-                  <div className="p-4 bg-white dark:bg-zinc-900/70 border border-zinc-200/80 dark:border-zinc-800 rounded-xl shadow-2xs">
-                    <span className="text-xs font-mono font-medium text-violet-600 dark:text-violet-400">Platforms</span>
-                    <h4 className="font-sans font-bold text-xl text-zinc-900 dark:text-zinc-100 mt-1">4 Native Targets</h4>
+                  <div className="p-4 bg-zinc-50/70 dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 rounded-xl">
+                    <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">Platforms</span>
+                    <h4 className="font-bold text-xl text-zinc-900 dark:text-zinc-100 mt-1">4 Native Targets</h4>
                     <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">Android APK, Windows Desktop, Debian/Ubuntu, and Arch Linux.</p>
                   </div>
                 </div>
               </section>
 
               {/* SECTION: QUICK START */}
-              <section id="quick-start" className="scroll-mt-28 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80">
+              <section id="quick-start" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">01.2 Quick Start</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">01.2 Quick Start</span>
                   <button 
                     onClick={() => handleCopyLink("quick-start")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
                   >
                     <Link2 className="w-3.5 h-3.5" />
                   </button>
-                  {copiedLink === "quick-start" && <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">Copied link!</span>}
+                  {copiedLink === "quick-start" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
                 </div>
-                <h2 className="font-sans font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
                   1-Command Instant Conversion
                 </h2>
-                <p className="font-sans text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
                   You can convert any live web URL or local project immediately using <code className="bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 px-1.5 py-0.5 rounded-md font-mono text-xs border border-zinc-200 dark:border-zinc-700">npx</code> without installing anything globally:
                 </p>
 
@@ -366,27 +383,27 @@ export default function DocsPage() {
                   }}
                 />
 
-                <p className="font-sans text-sm text-zinc-500 dark:text-zinc-400 mt-3">
+                <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-3">
                   This analyzes your web project, generates native wrappers, and outputs complete standalone packages into the <code className="bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded text-xs font-mono font-medium text-zinc-800 dark:text-zinc-200">app/</code> directory.
                 </p>
               </section>
 
               {/* SECTION: INSTALLATION */}
-              <section id="installation" className="scroll-mt-28 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80">
+              <section id="installation" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">01.3 Installation</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">01.3 Installation</span>
                   <button 
                     onClick={() => handleCopyLink("installation")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
                   >
                     <Link2 className="w-3.5 h-3.5" />
                   </button>
-                  {copiedLink === "installation" && <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">Copied link!</span>}
+                  {copiedLink === "installation" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
                 </div>
-                <h2 className="font-sans font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
                   Global CLI Installation
                 </h2>
-                <p className="font-sans text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
                   To use the <code className="bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 px-1.5 py-0.5 rounded-md font-mono text-xs border border-zinc-200 dark:border-zinc-700">web2app</code> command anywhere in your terminal, install it globally via your favorite package manager:
                 </p>
 
@@ -399,7 +416,7 @@ export default function DocsPage() {
                   }}
                 />
 
-                <p className="font-sans text-sm text-zinc-500 dark:text-zinc-400 mt-4">
+                <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-4">
                   After installation, verify that the CLI is ready:
                 </p>
 
@@ -407,21 +424,21 @@ export default function DocsPage() {
               </section>
 
               {/* SECTION: INIT WIZARD */}
-              <section id="init-wizard" className="scroll-mt-28 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80">
+              <section id="init-wizard" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">01.4 Configuration Wizard</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">01.4 Configuration Wizard</span>
                   <button 
                     onClick={() => handleCopyLink("init-wizard")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
                   >
                     <Link2 className="w-3.5 h-3.5" />
                   </button>
-                  {copiedLink === "init-wizard" && <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">Copied link!</span>}
+                  {copiedLink === "init-wizard" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
                 </div>
-                <h2 className="font-sans font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
                   Project Initialization Wizard
                 </h2>
-                <p className="font-sans text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
                   Run <code className="bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded text-xs font-mono text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700">web2app init</code> inside your project root to interactively configure your app name, package ID, target platforms, and icons:
                 </p>
 
@@ -438,50 +455,50 @@ export default function DocsPage() {
                   ========================================================================== */}
 
               {/* SECTION: ZERO BLOAT */}
-              <section id="zero-bloat" className="scroll-mt-28 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80">
+              <section id="zero-bloat" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">02.1 Architecture</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">02.1 Architecture</span>
                   <button 
                     onClick={() => handleCopyLink("zero-bloat")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
                   >
                     <Link2 className="w-3.5 h-3.5" />
                   </button>
-                  {copiedLink === "zero-bloat" && <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">Copied link!</span>}
+                  {copiedLink === "zero-bloat" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
                 </div>
-                <h2 className="font-sans font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
                   Zero-Runtime Overhead Architecture
                 </h2>
-                <p className="font-sans text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
                   Traditional desktop frameworks package entire browser binaries, rendering engines, and Node.js runtimes into each application. web2app takes an architectural approach that relies on native operating system WebViews:
                 </p>
 
-                <div className="bg-white dark:bg-zinc-900/70 border border-zinc-200/80 dark:border-zinc-800 rounded-2xl p-5 space-y-4 my-6 shadow-2xs">
+                <div className="bg-zinc-50/70 dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 rounded-xl p-5 space-y-4 my-6">
                   <div className="flex items-start gap-3.5">
-                    <span className="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 flex items-center justify-center font-mono font-bold text-xs shrink-0 border border-zinc-200 dark:border-zinc-700">1</span>
+                    <span className="w-7 h-7 rounded-md bg-zinc-200 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 flex items-center justify-center font-mono font-bold text-xs shrink-0 border border-zinc-300 dark:border-zinc-700">1</span>
                     <div>
-                      <h4 className="font-sans font-semibold text-sm text-zinc-900 dark:text-zinc-100">Android: AndroidX WebViewAssetLoader</h4>
-                      <p className="font-sans text-xs sm:text-[13px] text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">
+                      <h4 className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">Android: AndroidX WebViewAssetLoader</h4>
+                      <p className="text-xs sm:text-[13px] text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">
                         Uses Android’s native WebKit with secure local asset loading, GPU hardware acceleration, and full HTML5 IndexedDB storage support.
                       </p>
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3.5 pt-3 border-t border-zinc-100 dark:border-zinc-800/80">
-                    <span className="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 flex items-center justify-center font-mono font-bold text-xs shrink-0 border border-zinc-200 dark:border-zinc-700">2</span>
+                  <div className="flex items-start gap-3.5 pt-3 border-t border-zinc-200/60 dark:border-zinc-800">
+                    <span className="w-7 h-7 rounded-md bg-zinc-200 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 flex items-center justify-center font-mono font-bold text-xs shrink-0 border border-zinc-300 dark:border-zinc-700">2</span>
                     <div>
-                      <h4 className="font-sans font-semibold text-sm text-zinc-900 dark:text-zinc-100">Windows: MS Edge / Chromium App Mode</h4>
-                      <p className="font-sans text-xs sm:text-[13px] text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">
+                      <h4 className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">Windows: MS Edge / Chromium App Mode</h4>
+                      <p className="text-xs sm:text-[13px] text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">
                         Leverages Microsoft Edge App Mode with custom window boundaries, silent VBScript launch runners, and Start Menu registry shortcuts.
                       </p>
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3.5 pt-3 border-t border-zinc-100 dark:border-zinc-800/80">
-                    <span className="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 flex items-center justify-center font-mono font-bold text-xs shrink-0 border border-zinc-200 dark:border-zinc-700">3</span>
+                  <div className="flex items-start gap-3.5 pt-3 border-t border-zinc-200/60 dark:border-zinc-800">
+                    <span className="w-7 h-7 rounded-md bg-zinc-200 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 flex items-center justify-center font-mono font-bold text-xs shrink-0 border border-zinc-300 dark:border-zinc-700">3</span>
                     <div>
-                      <h4 className="font-sans font-semibold text-sm text-zinc-900 dark:text-zinc-100">Linux: Pure TypeScript DebPackager</h4>
-                      <p className="font-sans text-xs sm:text-[13px] text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">
+                      <h4 className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">Linux: Pure TypeScript DebPackager</h4>
+                      <p className="text-xs sm:text-[13px] text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">
                         Generates valid Debian binary .deb packages with XDG desktop application entries and scalable SVG/PNG icon hierarchies without requiring dpkg on the host machine.
                       </p>
                     </div>
@@ -490,21 +507,21 @@ export default function DocsPage() {
               </section>
 
               {/* SECTION: OUTPUT STRUCTURE */}
-              <section id="output-structure" className="scroll-mt-28 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80">
+              <section id="output-structure" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">02.2 Output Structure</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">02.2 Output Structure</span>
                   <button 
                     onClick={() => handleCopyLink("output-structure")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
                   >
                     <Link2 className="w-3.5 h-3.5" />
                   </button>
-                  {copiedLink === "output-structure" && <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">Copied link!</span>}
+                  {copiedLink === "output-structure" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
                 </div>
-                <h2 className="font-sans font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
-                  The <code className="font-mono text-xl bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded-lg border border-zinc-200 dark:border-zinc-700">app/</code> Directory Tree
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
+                  The <code className="font-mono text-xl bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded border border-zinc-200 dark:border-zinc-700">app/</code> Directory Tree
                 </h2>
-                <p className="font-sans text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
                   When you run a build, web2app outputs clean, dedicated subdirectories inside the <code className="font-mono text-xs bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded border border-zinc-200 dark:border-zinc-700">app/</code> folder:
                 </p>
 
@@ -539,25 +556,25 @@ export default function DocsPage() {
               </section>
 
               {/* SECTION: WEBVIEW ASSET LOADER */}
-              <section id="webview-asset-loader" className="scroll-mt-28 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80">
+              <section id="webview-asset-loader" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">02.3 Asset Loader</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">02.3 Asset Loader</span>
                   <button 
                     onClick={() => handleCopyLink("webview-asset-loader")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
                   >
                     <Link2 className="w-3.5 h-3.5" />
                   </button>
-                  {copiedLink === "webview-asset-loader" && <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">Copied link!</span>}
+                  {copiedLink === "webview-asset-loader" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
                 </div>
-                <h2 className="font-sans font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
                   AndroidX WebViewAssetLoader & CORS Elimination
                 </h2>
-                <p className="font-sans text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
                   Loading local HTML files using the traditional <code className="bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded font-mono text-xs">file:///android_asset/</code> scheme breaks modern web APIs like <code className="font-mono text-xs">fetch()</code>, CORS, localStorage, and Web Workers.
                 </p>
 
-                <p className="font-sans text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
                   web2app injects <strong className="text-zinc-900 dark:text-zinc-100 font-semibold">AndroidX WebViewAssetLoader</strong>, which routes all requests through a secure virtual HTTPS domain:
                 </p>
 
@@ -577,24 +594,24 @@ export default function DocsPage() {
               </section>
 
               {/* SECTION: DEB PACKAGER ENGINE */}
-              <section id="deb-packager-engine" className="scroll-mt-28 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80">
+              <section id="deb-packager-engine" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">02.4 DebPackager</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">02.4 DebPackager</span>
                   <button 
                     onClick={() => handleCopyLink("deb-packager-engine")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
                   >
                     <Link2 className="w-3.5 h-3.5" />
                   </button>
-                  {copiedLink === "deb-packager-engine" && <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">Copied link!</span>}
+                  {copiedLink === "deb-packager-engine" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
                 </div>
-                <h2 className="font-sans font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
                   Pure TypeScript Debian Packager
                 </h2>
-                <p className="font-sans text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
                   Traditionally, building Debian <code className="font-mono text-xs bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded">.deb</code> packages requires Linux with <code className="font-mono text-xs">dpkg-deb</code>, <code className="font-mono text-xs">ar</code>, and <code className="font-mono text-xs">tar</code> installed.
                 </p>
-                <p className="font-sans text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
                   web2app includes <strong className="text-zinc-900 dark:text-zinc-100 font-semibold">DebPackager</strong>, a standalone pure TypeScript AR and Tar packaging engine. It computes md5sums, sets correct Unix permissions, generates control metadata, and writes valid binary <code className="font-mono text-xs">.deb</code> archives on <strong>macOS, Windows, and Linux</strong> with zero native host dependencies.
                 </p>
               </section>
@@ -604,22 +621,22 @@ export default function DocsPage() {
                   ========================================================================== */}
 
               {/* SECTION: ANDROID */}
-              <section id="platform-android" className="scroll-mt-28 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80">
+              <section id="platform-android" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">03.1 Target Platforms</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">03.1 Target Platforms</span>
                   <button 
                     onClick={() => handleCopyLink("platform-android")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
                   >
                     <Link2 className="w-3.5 h-3.5" />
                   </button>
-                  {copiedLink === "platform-android" && <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">Copied link!</span>}
+                  {copiedLink === "platform-android" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
                 </div>
-                <h2 className="font-sans font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4 flex items-center gap-2.5">
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4 flex items-center gap-2.5">
                   <Smartphone className="w-6 h-6 text-zinc-700 dark:text-zinc-300" />
                   <span>Android Platform Target</span>
                 </h2>
-                <p className="font-sans text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
                   The Android target compiles a native Kotlin Android wrapper with Material 3 styling, hardware acceleration, and full offline WebKit capabilities:
                 </p>
 
@@ -632,7 +649,7 @@ export default function DocsPage() {
                   }}
                 />
 
-                <div className="my-6 bg-white dark:bg-zinc-900/70 border border-zinc-200/80 dark:border-zinc-800 rounded-xl overflow-hidden divide-y divide-zinc-100 dark:divide-zinc-800 text-xs sm:text-[13px] font-sans">
+                <div className="my-6 bg-zinc-50/70 dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden divide-y divide-zinc-200/60 dark:divide-zinc-800 text-xs sm:text-[13px]">
                   <div className="p-3.5 flex items-center justify-between">
                     <span className="font-semibold text-zinc-700 dark:text-zinc-300">Min SDK:</span>
                     <span className="text-zinc-500 dark:text-zinc-400 font-mono">API 24 (Android 7.0+ / 95%+ devices)</span>
@@ -643,28 +660,28 @@ export default function DocsPage() {
                   </div>
                   <div className="p-3.5 flex items-center justify-between">
                     <span className="font-semibold text-zinc-700 dark:text-zinc-300">Output File:</span>
-                    <span className="text-blue-600 dark:text-blue-400 font-mono font-medium">app/android/app-debug.apk</span>
+                    <span className="text-zinc-900 dark:text-zinc-100 font-mono font-medium">app/android/app-debug.apk</span>
                   </div>
                 </div>
               </section>
 
               {/* SECTION: WINDOWS */}
-              <section id="platform-windows" className="scroll-mt-28 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80">
+              <section id="platform-windows" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">03.2 Target Platforms</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">03.2 Target Platforms</span>
                   <button 
                     onClick={() => handleCopyLink("platform-windows")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
                   >
                     <Link2 className="w-3.5 h-3.5" />
                   </button>
-                  {copiedLink === "platform-windows" && <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">Copied link!</span>}
+                  {copiedLink === "platform-windows" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
                 </div>
-                <h2 className="font-sans font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4 flex items-center gap-2.5">
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4 flex items-center gap-2.5">
                   <Monitor className="w-6 h-6 text-zinc-700 dark:text-zinc-300" />
                   <span>Windows Desktop Platform Target</span>
                 </h2>
-                <p className="font-sans text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
                   The Windows target scaffolds a clean, standalone desktop application running on Microsoft Edge / Chromium WebView2:
                 </p>
 
@@ -682,22 +699,22 @@ export default function DocsPage() {
               </section>
 
               {/* SECTION: DEBIAN */}
-              <section id="platform-debian" className="scroll-mt-28 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80">
+              <section id="platform-debian" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">03.3 Target Platforms</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">03.3 Target Platforms</span>
                   <button 
                     onClick={() => handleCopyLink("platform-debian")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
                   >
                     <Link2 className="w-3.5 h-3.5" />
                   </button>
-                  {copiedLink === "platform-debian" && <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">Copied link!</span>}
+                  {copiedLink === "platform-debian" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
                 </div>
-                <h2 className="font-sans font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4 flex items-center gap-2.5">
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4 flex items-center gap-2.5">
                   <Disc className="w-6 h-6 text-zinc-700 dark:text-zinc-300" />
                   <span>Debian & Ubuntu Platform Target</span>
                 </h2>
-                <p className="font-sans text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
                   Builds ready-to-distribute binary <code className="font-mono text-xs bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded">.deb</code> packages for Debian, Ubuntu, Linux Mint, and Pop!_OS:
                 </p>
 
@@ -711,22 +728,22 @@ export default function DocsPage() {
               </section>
 
               {/* SECTION: ARCH */}
-              <section id="platform-arch" className="scroll-mt-28 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80">
+              <section id="platform-arch" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">03.4 Target Platforms</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">03.4 Target Platforms</span>
                   <button 
                     onClick={() => handleCopyLink("platform-arch")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
                   >
                     <Link2 className="w-3.5 h-3.5" />
                   </button>
-                  {copiedLink === "platform-arch" && <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">Copied link!</span>}
+                  {copiedLink === "platform-arch" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
                 </div>
-                <h2 className="font-sans font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4 flex items-center gap-2.5">
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4 flex items-center gap-2.5">
                   <Terminal className="w-6 h-6 text-zinc-700 dark:text-zinc-300" />
                   <span>Arch Linux & AUR Platform Target</span>
                 </h2>
-                <p className="font-sans text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
                   Generates an Arch Linux User Repository (AUR) compliant <code className="font-mono text-xs bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded">PKGBUILD</code> recipe and automated installation script:
                 </p>
 
@@ -744,25 +761,25 @@ export default function DocsPage() {
                   ========================================================================== */}
 
               {/* SECTION: NEXTJS */}
-              <section id="framework-nextjs" className="scroll-mt-28 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80">
+              <section id="framework-nextjs" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">04.1 Framework Guides</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">04.1 Framework Guides</span>
                   <button 
                     onClick={() => handleCopyLink("framework-nextjs")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
                   >
                     <Link2 className="w-3.5 h-3.5" />
                   </button>
-                  {copiedLink === "framework-nextjs" && <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">Copied link!</span>}
+                  {copiedLink === "framework-nextjs" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
                 </div>
-                <h2 className="font-sans font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
                   Next.js App & Pages Router Guide
                 </h2>
-                <p className="font-sans text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
                   web2app automatically detects Next.js projects and checks for static export configuration.
                 </p>
 
-                <p className="font-sans text-sm text-zinc-600 dark:text-zinc-400 mb-2 font-medium">
+                <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-2 font-medium">
                   1. In your <code className="bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded font-mono text-xs">next.config.mjs</code> or <code className="bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded font-mono text-xs">next.config.js</code>, configure static export:
                 </p>
 
@@ -780,7 +797,7 @@ export default nextConfig;`}
                   title="next.config.mjs"
                 />
 
-                <p className="font-sans text-sm text-zinc-600 dark:text-zinc-400 my-3 font-medium">
+                <p className="text-sm text-zinc-600 dark:text-zinc-400 my-3 font-medium">
                   2. Run web2app build in your Next.js project root:
                 </p>
 
@@ -788,21 +805,21 @@ export default nextConfig;`}
               </section>
 
               {/* SECTION: VITE */}
-              <section id="framework-vite" className="scroll-mt-28 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80">
+              <section id="framework-vite" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">04.2 Framework Guides</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">04.2 Framework Guides</span>
                   <button 
                     onClick={() => handleCopyLink("framework-vite")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
                   >
                     <Link2 className="w-3.5 h-3.5" />
                   </button>
-                  {copiedLink === "framework-vite" && <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">Copied link!</span>}
+                  {copiedLink === "framework-vite" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
                 </div>
-                <h2 className="font-sans font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
                   Vite / React / Vue / Svelte Guide
                 </h2>
-                <p className="font-sans text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
                   For Vite-based Single Page Apps, web2app detects your build script and ingests the <code className="bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded font-mono text-xs">dist/</code> directory automatically:
                 </p>
 
@@ -815,21 +832,21 @@ export default nextConfig;`}
               </section>
 
               {/* SECTION: PYTHON */}
-              <section id="framework-python" className="scroll-mt-28 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80">
+              <section id="framework-python" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">04.3 Framework Guides</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">04.3 Framework Guides</span>
                   <button 
                     onClick={() => handleCopyLink("framework-python")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
                   >
                     <Link2 className="w-3.5 h-3.5" />
                   </button>
-                  {copiedLink === "framework-python" && <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">Copied link!</span>}
+                  {copiedLink === "framework-python" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
                 </div>
-                <h2 className="font-sans font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
                   Python (Streamlit / Flask / FastAPI)
                 </h2>
-                <p className="font-sans text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
                   Convert local or hosted Python web dashboards into native apps:
                 </p>
 
@@ -842,21 +859,21 @@ export default nextConfig;`}
               </section>
 
               {/* SECTION: LIVE URLS */}
-              <section id="framework-live-urls" className="scroll-mt-28 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80">
+              <section id="framework-live-urls" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">04.4 Framework Guides</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">04.4 Framework Guides</span>
                   <button 
                     onClick={() => handleCopyLink("framework-live-urls")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
                   >
                     <Link2 className="w-3.5 h-3.5" />
                   </button>
-                  {copiedLink === "framework-live-urls" && <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">Copied link!</span>}
+                  {copiedLink === "framework-live-urls" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
                 </div>
-                <h2 className="font-sans font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
                   Live Web URLs & PWAs
                 </h2>
-                <p className="font-sans text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
                   You can turn any live website into standalone native apps with a single execution:
                 </p>
 
@@ -871,63 +888,63 @@ export default nextConfig;`}
                   ========================================================================== */}
 
               {/* SECTION: CLI BUILD */}
-              <section id="cli-build" className="scroll-mt-28 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80">
+              <section id="cli-build" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">05.1 CLI Reference</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">05.1 CLI Reference</span>
                   <button 
                     onClick={() => handleCopyLink("cli-build")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
                   >
                     <Link2 className="w-3.5 h-3.5" />
                   </button>
-                  {copiedLink === "cli-build" && <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">Copied link!</span>}
+                  {copiedLink === "cli-build" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
                 </div>
-                <h2 className="font-sans font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
                   <code className="font-mono text-2xl">web2app build</code>
                 </h2>
-                <p className="font-sans text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
                   Compiles and packages applications for target platforms.
                 </p>
 
                 <CodeBlock code="web2app build [platformOrUrl] [options]" language="bash" />
 
-                <div className="overflow-x-auto my-6 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/70 shadow-2xs">
+                <div className="overflow-x-auto my-6 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50">
                   <table className="w-full text-left font-sans text-xs sm:text-[13px] border-collapse">
                     <thead>
-                      <tr className="bg-zinc-50 dark:bg-zinc-800/60 text-zinc-700 dark:text-zinc-300 border-b border-zinc-200 dark:border-zinc-800 font-semibold">
+                      <tr className="bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border-b border-zinc-200 dark:border-zinc-800 font-semibold">
                         <th className="p-3.5">Option</th>
                         <th className="p-3.5">Default</th>
                         <th className="p-3.5">Description</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800 text-zinc-600 dark:text-zinc-300">
+                    <tbody className="divide-y divide-zinc-200/60 dark:divide-zinc-800 text-zinc-600 dark:text-zinc-300">
                       <tr>
-                        <td className="p-3.5 font-mono text-xs font-semibold text-blue-600 dark:text-blue-400">[platformOrUrl]</td>
+                        <td className="p-3.5 font-mono text-xs font-semibold text-zinc-900 dark:text-zinc-100">[platformOrUrl]</td>
                         <td className="p-3.5 font-mono text-xs text-zinc-500">all</td>
                         <td className="p-3.5">Target platform (<code className="font-mono text-xs">android</code>, <code className="font-mono text-xs">windows</code>, <code className="font-mono text-xs">debian</code>, <code className="font-mono text-xs">arch</code>, <code className="font-mono text-xs">all</code>) or a live URL.</td>
                       </tr>
                       <tr>
-                        <td className="p-3.5 font-mono text-xs font-semibold text-blue-600 dark:text-blue-400">-u, --url &lt;url&gt;</td>
+                        <td className="p-3.5 font-mono text-xs font-semibold text-zinc-900 dark:text-zinc-100">-u, --url &lt;url&gt;</td>
                         <td className="p-3.5 font-mono text-xs text-zinc-500">undefined</td>
                         <td className="p-3.5">Live web page URL to convert.</td>
                       </tr>
                       <tr>
-                        <td className="p-3.5 font-mono text-xs font-semibold text-blue-600 dark:text-blue-400">-r, --release</td>
+                        <td className="p-3.5 font-mono text-xs font-semibold text-zinc-900 dark:text-zinc-100">-r, --release</td>
                         <td className="p-3.5 font-mono text-xs text-zinc-500">false</td>
                         <td className="p-3.5">Build release APK / binary package.</td>
                       </tr>
                       <tr>
-                        <td className="p-3.5 font-mono text-xs font-semibold text-blue-600 dark:text-blue-400">-b, --bundle</td>
+                        <td className="p-3.5 font-mono text-xs font-semibold text-zinc-900 dark:text-zinc-100">-b, --bundle</td>
                         <td className="p-3.5 font-mono text-xs text-zinc-500">false</td>
                         <td className="p-3.5">Build Android App Bundle (<code className="font-mono text-xs">.aab</code>) for Google Play.</td>
                       </tr>
                       <tr>
-                        <td className="p-3.5 font-mono text-xs font-semibold text-blue-600 dark:text-blue-400">--skip-web-build</td>
+                        <td className="p-3.5 font-mono text-xs font-semibold text-zinc-900 dark:text-zinc-100">--skip-web-build</td>
                         <td className="p-3.5 font-mono text-xs text-zinc-500">false</td>
                         <td className="p-3.5">Skip executing project build script and use existing exported files.</td>
                       </tr>
                       <tr>
-                        <td className="p-3.5 font-mono text-xs font-semibold text-blue-600 dark:text-blue-400">-o, --out &lt;dir&gt;</td>
+                        <td className="p-3.5 font-mono text-xs font-semibold text-zinc-900 dark:text-zinc-100">-o, --out &lt;dir&gt;</td>
                         <td className="p-3.5 font-mono text-xs text-zinc-500">app</td>
                         <td className="p-3.5">Custom output directory name.</td>
                       </tr>
@@ -937,21 +954,21 @@ export default nextConfig;`}
               </section>
 
               {/* SECTION: CLI DOCTOR */}
-              <section id="cli-doctor" className="scroll-mt-28 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80">
+              <section id="cli-doctor" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">05.2 CLI Reference</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">05.2 CLI Reference</span>
                   <button 
                     onClick={() => handleCopyLink("cli-doctor")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
                   >
                     <Link2 className="w-3.5 h-3.5" />
                   </button>
-                  {copiedLink === "cli-doctor" && <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">Copied link!</span>}
+                  {copiedLink === "cli-doctor" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
                 </div>
-                <h2 className="font-sans font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
                   <code className="font-mono text-2xl">web2app doctor</code>
                 </h2>
-                <p className="font-sans text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
                   Runs complete diagnostic checks on your environment dependencies (Node.js, JDK / Java, Android SDK, ADB, Gradle, and packaging tools) with actionable fix recommendations:
                 </p>
 
@@ -959,18 +976,18 @@ export default nextConfig;`}
               </section>
 
               {/* SECTION: CLI INIT */}
-              <section id="cli-init" className="scroll-mt-28 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80">
+              <section id="cli-init" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">05.3 CLI Reference</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">05.3 CLI Reference</span>
                   <button 
                     onClick={() => handleCopyLink("cli-init")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
                   >
                     <Link2 className="w-3.5 h-3.5" />
                   </button>
-                  {copiedLink === "cli-init" && <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">Copied link!</span>}
+                  {copiedLink === "cli-init" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
                 </div>
-                <h2 className="font-sans font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
                   <code className="font-mono text-2xl">web2app init</code>
                 </h2>
                 <CodeBlock
@@ -980,63 +997,63 @@ export default nextConfig;`}
               </section>
 
               {/* SECTION: CLI RUN */}
-              <section id="cli-run" className="scroll-mt-28 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80">
+              <section id="cli-run" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">05.4 CLI Reference</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">05.4 CLI Reference</span>
                   <button 
                     onClick={() => handleCopyLink("cli-run")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
                   >
                     <Link2 className="w-3.5 h-3.5" />
                   </button>
-                  {copiedLink === "cli-run" && <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">Copied link!</span>}
+                  {copiedLink === "cli-run" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
                 </div>
-                <h2 className="font-sans font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
                   <code className="font-mono text-2xl">web2app run</code>
                 </h2>
-                <p className="font-sans text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
                   Builds, installs, and launches the app directly on a connected physical Android device, emulator, or local desktop:
                 </p>
                 <CodeBlock code="web2app run android" language="bash" />
               </section>
 
               {/* SECTION: CLI CLEAN */}
-              <section id="cli-clean" className="scroll-mt-28 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80">
+              <section id="cli-clean" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">05.5 CLI Reference</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">05.5 CLI Reference</span>
                   <button 
                     onClick={() => handleCopyLink("cli-clean")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
                   >
                     <Link2 className="w-3.5 h-3.5" />
                   </button>
-                  {copiedLink === "cli-clean" && <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">Copied link!</span>}
+                  {copiedLink === "cli-clean" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
                 </div>
-                <h2 className="font-sans font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
                   <code className="font-mono text-2xl">web2app clean</code>
                 </h2>
-                <p className="font-sans text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
                   Cleans the temporary <code className="font-mono text-xs bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded">.web2app/</code> workspace and removes generated build outputs in <code className="font-mono text-xs bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded">app/</code>.
                 </p>
                 <CodeBlock code="web2app clean" language="bash" />
               </section>
 
               {/* SECTION: CLI OPEN */}
-              <section id="cli-open" className="scroll-mt-28 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80">
+              <section id="cli-open" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">05.6 CLI Reference</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">05.6 CLI Reference</span>
                   <button 
                     onClick={() => handleCopyLink("cli-open")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
                   >
                     <Link2 className="w-3.5 h-3.5" />
                   </button>
-                  {copiedLink === "cli-open" && <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">Copied link!</span>}
+                  {copiedLink === "cli-open" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
                 </div>
-                <h2 className="font-sans font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
                   <code className="font-mono text-2xl">web2app open</code>
                 </h2>
-                <p className="font-sans text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
                   Opens the generated native Android project directly in Android Studio:
                 </p>
                 <CodeBlock code="web2app open android" language="bash" />
@@ -1047,21 +1064,21 @@ export default nextConfig;`}
                   ========================================================================== */}
 
               {/* SECTION: CONFIG SCHEMA */}
-              <section id="config-schema" className="scroll-mt-28 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80">
+              <section id="config-schema" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">06.1 Configuration</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">06.1 Configuration</span>
                   <button 
                     onClick={() => handleCopyLink("config-schema")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
                   >
                     <Link2 className="w-3.5 h-3.5" />
                   </button>
-                  {copiedLink === "config-schema" && <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">Copied link!</span>}
+                  {copiedLink === "config-schema" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
                 </div>
-                <h2 className="font-sans font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
                   Configuration File Schema
                 </h2>
-                <p className="font-sans text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
                   web2app supports <code className="bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded font-mono text-xs">web2app.config.ts</code>, <code className="bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded font-mono text-xs">web2app.config.js</code>, or <code className="bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded font-mono text-xs">web2app.config.json</code>:
                 </p>
 
@@ -1116,51 +1133,51 @@ export default {
               </section>
 
               {/* SECTION: CONFIG ANDROID */}
-              <section id="config-android" className="scroll-mt-28 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80">
+              <section id="config-android" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">06.2 Configuration</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">06.2 Configuration</span>
                   <button 
                     onClick={() => handleCopyLink("config-android")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
                   >
                     <Link2 className="w-3.5 h-3.5" />
                   </button>
-                  {copiedLink === "config-android" && <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">Copied link!</span>}
+                  {copiedLink === "config-android" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
                 </div>
-                <h2 className="font-sans font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
                   Android Configuration Options
                 </h2>
-                <div className="overflow-x-auto my-6 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/70 shadow-2xs">
+                <div className="overflow-x-auto my-6 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50">
                   <table className="w-full text-left font-sans text-xs sm:text-[13px] border-collapse">
                     <thead>
-                      <tr className="bg-zinc-50 dark:bg-zinc-800/60 text-zinc-700 dark:text-zinc-300 border-b border-zinc-200 dark:border-zinc-800 font-semibold">
+                      <tr className="bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border-b border-zinc-200 dark:border-zinc-800 font-semibold">
                         <th className="p-3.5">Property</th>
                         <th className="p-3.5">Type</th>
                         <th className="p-3.5">Default</th>
                         <th className="p-3.5">Description</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800 text-zinc-600 dark:text-zinc-300">
+                    <tbody className="divide-y divide-zinc-200/60 dark:divide-zinc-800 text-zinc-600 dark:text-zinc-300">
                       <tr>
-                        <td className="p-3.5 font-mono text-xs font-semibold text-blue-600 dark:text-blue-400">minSdk</td>
+                        <td className="p-3.5 font-mono text-xs font-semibold text-zinc-900 dark:text-zinc-100">minSdk</td>
                         <td className="p-3.5 font-mono text-xs text-zinc-500">number</td>
                         <td className="p-3.5 font-mono text-xs text-zinc-500">24</td>
                         <td className="p-3.5">Minimum Android API level supported.</td>
                       </tr>
                       <tr>
-                        <td className="p-3.5 font-mono text-xs font-semibold text-blue-600 dark:text-blue-400">targetSdk</td>
+                        <td className="p-3.5 font-mono text-xs font-semibold text-zinc-900 dark:text-zinc-100">targetSdk</td>
                         <td className="p-3.5 font-mono text-xs text-zinc-500">number</td>
                         <td className="p-3.5 font-mono text-xs text-zinc-500">35</td>
                         <td className="p-3.5">Target Android API level.</td>
                       </tr>
                       <tr>
-                        <td className="p-3.5 font-mono text-xs font-semibold text-blue-600 dark:text-blue-400">orientation</td>
+                        <td className="p-3.5 font-mono text-xs font-semibold text-zinc-900 dark:text-zinc-100">orientation</td>
                         <td className="p-3.5 font-mono text-xs text-zinc-500">string</td>
                         <td className="p-3.5 font-mono text-xs text-zinc-500">&quot;unspecified&quot;</td>
                         <td className="p-3.5">Screen orientation lock (<code className="font-mono text-xs">portrait</code>, <code className="font-mono text-xs">landscape</code>, <code className="font-mono text-xs">sensor</code>).</td>
                       </tr>
                       <tr>
-                        <td className="p-3.5 font-mono text-xs font-semibold text-blue-600 dark:text-blue-400">permissions</td>
+                        <td className="p-3.5 font-mono text-xs font-semibold text-zinc-900 dark:text-zinc-100">permissions</td>
                         <td className="p-3.5 font-mono text-xs text-zinc-500">string[]</td>
                         <td className="p-3.5 font-mono text-xs text-zinc-500">[]</td>
                         <td className="p-3.5">Android permissions to inject into AndroidManifest.xml.</td>
@@ -1175,21 +1192,21 @@ export default {
                   ========================================================================== */}
 
               {/* SECTION: KEYSTORE */}
-              <section id="android-keystore" className="scroll-mt-28 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80">
+              <section id="android-keystore" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">07.1 Production</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">07.1 Production</span>
                   <button 
                     onClick={() => handleCopyLink("android-keystore")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
                   >
                     <Link2 className="w-3.5 h-3.5" />
                   </button>
-                  {copiedLink === "android-keystore" && <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">Copied link!</span>}
+                  {copiedLink === "android-keystore" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
                 </div>
-                <h2 className="font-sans font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
                   Release Signing & Android Keystores
                 </h2>
-                <p className="font-sans text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
                   To publish to the Google Play Store, sign your APK or App Bundle (.aab) with a production keystore:
                 </p>
 
@@ -1209,7 +1226,7 @@ export default {
                   title="Keystore Configuration"
                 />
 
-                <p className="font-sans text-sm text-zinc-600 dark:text-zinc-400 my-3 font-medium">
+                <p className="text-sm text-zinc-600 dark:text-zinc-400 my-3 font-medium">
                   Then build the release bundle:
                 </p>
 
@@ -1217,21 +1234,21 @@ export default {
               </section>
 
               {/* SECTION: CI/CD */}
-              <section id="ci-cd" className="scroll-mt-28 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80">
+              <section id="ci-cd" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">07.2 Automation</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">07.2 Automation</span>
                   <button 
                     onClick={() => handleCopyLink("ci-cd")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
                   >
                     <Link2 className="w-3.5 h-3.5" />
                   </button>
-                  {copiedLink === "ci-cd" && <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">Copied link!</span>}
+                  {copiedLink === "ci-cd" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
                 </div>
-                <h2 className="font-sans font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
                   GitHub Actions CI/CD Pipeline
                 </h2>
-                <p className="font-sans text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
+                <p className="text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed mb-4">
                   Automate building and releasing all 4 platform artifacts on every GitHub release:
                 </p>
 
@@ -1264,39 +1281,39 @@ jobs:
               </section>
 
               {/* SECTION: TROUBLESHOOTING */}
-              <section id="troubleshooting" className="scroll-mt-28 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80">
+              <section id="troubleshooting" className="scroll-mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="group flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">07.3 Support</span>
+                  <span className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500">07.3 Support</span>
                   <button 
                     onClick={() => handleCopyLink("troubleshooting")}
                     className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-opacity"
                   >
                     <Link2 className="w-3.5 h-3.5" />
                   </button>
-                  {copiedLink === "troubleshooting" && <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">Copied link!</span>}
+                  {copiedLink === "troubleshooting" && <span className="text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">Copied!</span>}
                 </div>
-                <h2 className="font-sans font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
+                <h2 className="font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-tight mb-4">
                   Troubleshooting & Common Inquiries
                 </h2>
                 
                 <div className="space-y-3.5 my-6">
-                  <div className="p-4 bg-white dark:bg-zinc-900/70 border border-zinc-200/80 dark:border-zinc-800 rounded-xl shadow-2xs">
-                    <h4 className="font-sans font-semibold text-sm text-zinc-900 dark:text-zinc-100">Q: Android build fails with &quot;JAVA_HOME not set&quot;?</h4>
-                    <p className="font-sans text-xs sm:text-[13.5px] text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">
+                  <div className="p-4 bg-zinc-50/70 dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 rounded-xl">
+                    <h4 className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">Q: Android build fails with &quot;JAVA_HOME not set&quot;?</h4>
+                    <p className="text-xs sm:text-[13.5px] text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">
                       Ensure you have JDK 17 or 21 installed. Set <code className="font-mono text-xs bg-zinc-100 dark:bg-zinc-800 px-1 py-0.5 rounded">export JAVA_HOME=/path/to/jdk</code> in your <code className="font-mono text-xs bg-zinc-100 dark:bg-zinc-800 px-1 py-0.5 rounded">~/.bashrc</code> or run <code className="font-mono text-xs bg-zinc-100 dark:bg-zinc-800 px-1 py-0.5 rounded">web2app doctor</code> to inspect your Java environment.
                     </p>
                   </div>
 
-                  <div className="p-4 bg-white dark:bg-zinc-900/70 border border-zinc-200/80 dark:border-zinc-800 rounded-xl shadow-2xs">
-                    <h4 className="font-sans font-semibold text-sm text-zinc-900 dark:text-zinc-100">Q: Next.js images not loading in native offline mode?</h4>
-                    <p className="font-sans text-xs sm:text-[13.5px] text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">
+                  <div className="p-4 bg-zinc-50/70 dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 rounded-xl">
+                    <h4 className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">Q: Next.js images not loading in native offline mode?</h4>
+                    <p className="text-xs sm:text-[13.5px] text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">
                       Add <code className="font-mono text-xs bg-zinc-100 dark:bg-zinc-800 px-1 py-0.5 rounded">images: &#123; unoptimized: true &#125;</code> to your <code className="font-mono text-xs bg-zinc-100 dark:bg-zinc-800 px-1 py-0.5 rounded">next.config.js</code> so Next.js exports static PNG/WebP files instead of relying on the Node.js image optimization server.
                     </p>
                   </div>
 
-                  <div className="p-4 bg-white dark:bg-zinc-900/70 border border-zinc-200/80 dark:border-zinc-800 rounded-xl shadow-2xs">
-                    <h4 className="font-sans font-semibold text-sm text-zinc-900 dark:text-zinc-100">Q: Can I build Debian (.deb) packages on Windows or Mac?</h4>
-                    <p className="font-sans text-xs sm:text-[13.5px] text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">
+                  <div className="p-4 bg-zinc-50/70 dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 rounded-xl">
+                    <h4 className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">Q: Can I build Debian (.deb) packages on Windows or Mac?</h4>
+                    <p className="text-xs sm:text-[13.5px] text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">
                       Yes! web2app includes a pure TypeScript Debian packager that creates binary .deb files on any OS with zero native Linux dependencies.
                     </p>
                   </div>
@@ -1313,13 +1330,13 @@ jobs:
                     handleSelectSection(prevItem.id);
                     playClick();
                   }}
-                  className="flex-1 max-w-xs p-3.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 rounded-xl text-left transition-all group shadow-2xs"
+                  className="flex-1 max-w-xs p-3.5 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-600 rounded-xl text-left transition-all group"
                 >
                   <span className="text-[11px] text-zinc-400 flex items-center gap-1 mb-1 font-medium">
                     <ArrowLeft className="w-3 h-3 group-hover:-translate-x-0.5 transition-transform" />
-                    Previous Topic
+                    Previous
                   </span>
-                  <span className="font-semibold text-xs sm:text-sm text-zinc-800 dark:text-zinc-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 truncate block">
+                  <span className="font-semibold text-xs sm:text-sm text-zinc-800 dark:text-zinc-200 group-hover:text-zinc-950 dark:group-hover:text-white truncate block">
                     {prevItem.title}
                   </span>
                 </button>
@@ -1331,64 +1348,68 @@ jobs:
                     handleSelectSection(nextItem.id);
                     playClick();
                   }}
-                  className="flex-1 max-w-xs p-3.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 rounded-xl text-right transition-all group shadow-2xs"
+                  className="flex-1 max-w-xs p-3.5 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-600 rounded-xl text-right transition-all group"
                 >
                   <span className="text-[11px] text-zinc-400 flex items-center justify-end gap-1 mb-1 font-medium">
-                    Next Topic
+                    Next
                     <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                   </span>
-                  <span className="font-semibold text-xs sm:text-sm text-zinc-800 dark:text-zinc-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 truncate block">
+                  <span className="font-semibold text-xs sm:text-sm text-zinc-800 dark:text-zinc-200 group-hover:text-zinc-950 dark:group-hover:text-white truncate block">
                     {nextItem.title}
                   </span>
                 </button>
               )}
             </div>
 
-          </main>
-
-          {/* Right Sidebar: On this Page Table of Contents */}
-          <aside className="hidden xl:block w-56 sticky top-[115px] self-start h-[calc(100vh-130px)] overflow-y-auto no-scrollbar py-2 text-xs font-sans">
-            <div className="font-semibold uppercase text-[11px] tracking-wider text-zinc-400 dark:text-zinc-500 mb-3 px-2">
-              On this page
+            {/* Clean minimalist docs footer */}
+            <div className="mt-12 pt-6 border-t border-zinc-100 dark:border-zinc-800 text-center text-xs text-zinc-400 dark:text-zinc-500">
+              web2app documentation &bull; Built with Next.js & TypeScript
             </div>
-            <nav className="space-y-0.5">
-              {allDocItems.map((item) => {
-                const isActive = activeSection === item.id;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => {
-                      handleSelectSection(item.id);
-                      playClick();
-                    }}
-                    className={`w-full text-left px-2.5 py-1.5 rounded-md transition-colors text-xs truncate block ${
-                      isActive
-                        ? "text-blue-600 dark:text-blue-400 font-semibold bg-blue-50/60 dark:bg-blue-950/40"
-                        : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200"
-                    }`}
-                  >
-                    {item.title}
-                  </button>
-                );
-              })}
-            </nav>
-          </aside>
 
+          </main>
         </div>
 
-        {/* Floating Scroll to Top button */}
-        {showBackToTop && (
-          <button
-            onClick={scrollToTop}
-            className="fixed bottom-6 right-6 p-2.5 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-800 rounded-full shadow-md hover:shadow-lg hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all z-40"
-            title="Back to top"
-          >
-            <ChevronUp className="w-4 h-4" />
-          </button>
-        )}
+        {/* Fixed Right Sidebar: On this Page Table of Contents */}
+        <aside className="hidden xl:block w-64 fixed top-14 right-0 bottom-0 border-l border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-950 overflow-y-auto no-scrollbar p-6 text-xs z-20">
+          <div className="font-semibold uppercase text-[11px] tracking-wider text-zinc-400 dark:text-zinc-500 mb-3">
+            On this page
+          </div>
+          <nav className="space-y-1">
+            {allDocItems.map((item) => {
+              const isActive = activeSection === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    handleSelectSection(item.id);
+                    playClick();
+                  }}
+                  className={`w-full text-left px-2 py-1 rounded-md transition-colors text-xs truncate block ${
+                    isActive
+                      ? "text-zinc-950 dark:text-white font-semibold bg-zinc-100 dark:bg-zinc-800"
+                      : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200"
+                  }`}
+                >
+                  {item.title}
+                </button>
+              );
+            })}
+          </nav>
+        </aside>
 
       </div>
-      <Footer />
+
+      {/* Floating Scroll to Top button */}
+      {showBackToTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-6 right-6 p-2.5 bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 rounded-full shadow-lg hover:opacity-90 transition-all z-40"
+          title="Back to top"
+        >
+          <ChevronUp className="w-4 h-4" />
+        </button>
+      )}
+
     </div>
   );
 }

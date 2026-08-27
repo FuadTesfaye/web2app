@@ -38,11 +38,11 @@ export default function CodeBlock({
   const lines = currentCode.split("\n");
 
   return (
-    <div className="my-5 rounded-xl border border-zinc-200 dark:border-zinc-800/80 bg-[#0d1117] text-zinc-100 shadow-sm overflow-hidden font-mono text-xs sm:text-[13px] w-full max-w-full">
+    <div className="my-5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-950 text-zinc-100 shadow-xs overflow-hidden font-mono text-xs sm:text-[13px] w-full max-w-full">
       {/* Header / Tabs Bar */}
-      <div className="bg-[#161b22] border-b border-zinc-800/80 px-3.5 py-2 flex items-center justify-between gap-2 overflow-x-auto no-scrollbar">
+      <div className="bg-zinc-900/90 border-b border-zinc-800 px-3.5 py-2 flex items-center justify-between gap-2 overflow-x-auto no-scrollbar">
         {tabs && tabKeys.length > 0 ? (
-          <div className="flex items-center gap-1.5 shrink-0">
+          <div className="flex items-center gap-1 shrink-0">
             {tabKeys.map((tab) => {
               const isActive = activeTab === tab;
               return (
@@ -52,9 +52,9 @@ export default function CodeBlock({
                     setActiveTab(tab);
                     playClick();
                   }}
-                  className={`px-3 py-1 text-xs rounded-md transition-all font-sans font-medium ${
+                  className={`px-2.5 py-1 text-xs rounded-md transition-all font-sans font-medium ${
                     isActive
-                      ? "bg-zinc-800 text-white shadow-xs"
+                      ? "bg-zinc-800 text-white shadow-2xs"
                       : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40"
                   }`}
                 >
@@ -66,9 +66,9 @@ export default function CodeBlock({
         ) : (
           <div className="flex items-center gap-2 min-w-0">
             <div className="flex items-center gap-1.5 mr-1 select-none">
-              <span className="w-2.5 h-2.5 rounded-full bg-zinc-700/80 inline-block"></span>
-              <span className="w-2.5 h-2.5 rounded-full bg-zinc-700/80 inline-block"></span>
-              <span className="w-2.5 h-2.5 rounded-full bg-zinc-700/80 inline-block"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-zinc-700 inline-block"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-zinc-700 inline-block"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-zinc-700 inline-block"></span>
             </div>
             {title ? (
               <span className="text-zinc-300 font-sans font-medium text-xs truncate flex items-center gap-1.5">
@@ -87,13 +87,13 @@ export default function CodeBlock({
         {/* Copy Button */}
         <button
           onClick={handleCopy}
-          className="shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-sans font-medium text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/80 transition-all"
+          className="shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-sans font-medium text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 transition-all"
           title="Copy code"
         >
           {copied ? (
             <>
-              <Check className="w-3.5 h-3.5 text-emerald-400 stroke-[2.5]" />
-              <span className="text-emerald-400">Copied</span>
+              <Check className="w-3.5 h-3.5 text-zinc-100 stroke-[2.5]" />
+              <span className="text-zinc-100 font-medium">Copied</span>
             </>
           ) : (
             <>
@@ -106,7 +106,7 @@ export default function CodeBlock({
 
       {/* Code Snippet Content */}
       <div className="p-4 overflow-x-auto no-scrollbar leading-relaxed">
-        <pre className="text-zinc-200 font-mono text-[12px] sm:text-[13px] leading-relaxed selection:bg-blue-500/30 selection:text-white">
+        <pre className="text-zinc-200 font-mono text-[12px] sm:text-[13px] leading-relaxed selection:bg-zinc-700 selection:text-white">
           <code>
             {showLineNumbers
               ? lines.map((line, idx) => (

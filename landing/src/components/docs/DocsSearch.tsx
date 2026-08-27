@@ -39,7 +39,7 @@ export default function DocsSearch({
           value={query}
           onChange={(e) => onQueryChange(e.target.value)}
           placeholder="Search documentation, CLI commands, configs..."
-          className="w-full bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 border border-zinc-200 dark:border-zinc-800 rounded-xl pl-10 pr-24 py-2.5 font-sans text-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-xs"
+          className="w-full bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 border border-zinc-200 dark:border-zinc-800 rounded-xl pl-10 pr-24 py-2.5 font-sans text-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 dark:focus:ring-zinc-100/10 focus:border-zinc-900 dark:focus:border-zinc-100 transition-all shadow-xs"
         />
         {query ? (
           <button
@@ -65,7 +65,7 @@ export default function DocsSearch({
           <span>Found <strong className="text-zinc-800 dark:text-zinc-200">{resultCount}</strong> matching section{resultCount === 1 ? "" : "s"}</span>
           <button 
             onClick={() => onQueryChange("")} 
-            className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
+            className="text-zinc-900 dark:text-zinc-100 hover:underline font-medium"
           >
             Clear filter
           </button>
