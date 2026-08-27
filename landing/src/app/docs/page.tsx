@@ -228,7 +228,7 @@ export default function DocsPage() {
         </div>
 
         {/* Main Docs Content Layout */}
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row w-full max-w-full px-4 sm:px-6 lg:px-8 py-6 gap-8">
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-start w-full px-4 sm:px-6 lg:px-8 py-6 gap-8">
           
           {/* Left Sidebar */}
           <DocsSidebar
@@ -1347,7 +1347,7 @@ jobs:
           </main>
 
           {/* Right Sidebar: On this Page Table of Contents */}
-          <aside className="hidden xl:block w-56 sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto no-scrollbar py-2 text-xs font-sans">
+          <aside className="hidden xl:block w-56 sticky top-[115px] self-start h-[calc(100vh-130px)] overflow-y-auto no-scrollbar py-2 text-xs font-sans">
             <div className="font-semibold uppercase text-[11px] tracking-wider text-zinc-400 dark:text-zinc-500 mb-3 px-2">
               On this page
             </div>

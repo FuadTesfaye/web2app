@@ -45,7 +45,7 @@ export default function DocsSidebar({
 
       {/* Sidebar container */}
       <aside
-        className={`fixed top-16 lg:sticky lg:top-24 z-40 lg:z-10 h-[calc(100vh-4rem)] lg:h-[calc(100vh-6rem)] w-72 sm:w-76 bg-white dark:bg-zinc-950 border-r border-zinc-200/80 dark:border-zinc-800/80 p-4 lg:py-2 lg:pr-6 overflow-y-auto no-scrollbar transition-transform duration-200 ease-in-out shrink-0 ${
+        className={`fixed top-16 lg:sticky lg:top-[115px] lg:self-start z-40 lg:z-10 h-[calc(100vh-4rem)] lg:h-[calc(100vh-130px)] w-72 sm:w-76 bg-white dark:bg-zinc-950 border-r border-zinc-200/80 dark:border-zinc-800/80 p-4 lg:py-2 lg:pr-6 overflow-y-auto no-scrollbar transition-transform duration-200 ease-in-out shrink-0 ${
           isOpenMobile ? "translate-x-0 shadow-xl" : "-translate-x-full lg:translate-x-0"
         }`}
       >
