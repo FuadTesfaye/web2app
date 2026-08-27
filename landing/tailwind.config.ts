@@ -1,10 +1,13 @@
+import { createPreset } from "fumadocs-ui/tailwind-plugin";
 import type { Config } from "tailwindcss";
 
 const config: Config = {
   content: [
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
+    "./node_modules/fumadocs-ui/dist/**/*.js",
   ],
   darkMode: "class",
+  presets: [createPreset()],
   theme: {
     extend: {
       colors: {
@@ -14,7 +17,7 @@ const config: Config = {
         ink: "var(--ink)",
         "ink-muted": "var(--ink-muted)",
         "border-color": "var(--border-color)",
-        
+
         "accent-yellow": "var(--accent-yellow)",
         "accent-pink": "var(--accent-pink)",
         "accent-cyan": "var(--accent-cyan)",
@@ -44,7 +47,6 @@ const config: Config = {
         mono: ["JetBrains Mono", "monospace"],
         sans: ["Plus Jakarta Sans", "sans-serif"],
       },
-
     },
   },
   plugins: [],
