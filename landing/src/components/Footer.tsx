@@ -34,7 +34,7 @@ export default function Footer() {
                   web2app
                 </span>
                 <span className="text-gray-400 text-[10px] sm:text-[11px] uppercase tracking-wider block truncate">
-                  // Web to Native App Packaging Engine
+                  {"// Web to Native App Packaging Engine"}
                 </span>
               </div>
             </div>

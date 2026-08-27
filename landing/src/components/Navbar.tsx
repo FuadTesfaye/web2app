@@ -109,7 +109,7 @@ export default function Navbar() {
               </span>
             </span>
             <span className="text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-widest text-ink-muted hidden xs:inline">
-              // Native App Compiler
+              {"// Native App Compiler"}
             </span>
           </div>
         </a>
@@ -201,7 +201,7 @@ export default function Navbar() {
             {themeMenuOpen && (
               <div className="absolute right-0 mt-2 w-52 sm:w-56 max-w-[calc(100vw-1.5rem)] bg-surface text-ink border-3 border-ink shadow-neo-md z-50 p-2 flex flex-col gap-1 font-mono text-xs font-bold animate-in fade-in slide-in-from-top-2 duration-150">
                 <div className="px-2 py-1 text-[10px] font-black uppercase text-ink-muted border-b border-ink/20 mb-1 flex items-center justify-between">
-                  <span>// Select Theme</span>
+                  <span>{"// Select Theme"}</span>
                   <Palette className="w-3 h-3 text-accent-yellow" />
                 </div>
                 {THEMES.map((theme) => {
@@ -332,7 +332,7 @@ export default function Navbar() {
           {/* Mobile Theme Selector Grid */}
           <div className="mt-2 pt-2 border-t-2 border-ink/20">
             <span className="text-[10px] font-black text-ink-muted uppercase block mb-2">
-              // Choose Palette Theme:
+              {"// Choose Palette Theme:"}
             </span>
             <div className="grid grid-cols-2 gap-1.5">
               {THEMES.map((theme) => {

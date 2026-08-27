@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { AlertCircle, CheckCircle, Info, Zap, AlertTriangle } from "lucide-react";
+import { CheckCircle, Info, Zap, AlertTriangle } from "lucide-react";
 
 interface DocsCalloutProps {
   type?: "info" | "tip" | "warning" | "important";
@@ -16,45 +16,51 @@ export default function DocsCallout({
 }: DocsCalloutProps) {
   const styles = {
     info: {
-      bg: "bg-surface",
-      border: "border-ink",
-      accent: "bg-accent-cyan text-ink",
-      icon: <Info className="w-4 h-4 text-ink shrink-0" />,
-      defaultTitle: "NOTE",
+      container: "bg-blue-500/5 border-blue-500/20 text-blue-950 dark:text-blue-100",
+      iconColor: "text-blue-600 dark:text-blue-400",
+      titleColor: "text-blue-900 dark:text-blue-200",
+      textColor: "text-blue-900/80 dark:text-blue-200/80",
+      icon: <Info className="w-4 h-4 shrink-0" />,
+      defaultTitle: "Note",
     },
     tip: {
-      bg: "bg-surface",
-      border: "border-ink",
-      accent: "bg-accent-green text-ink",
-      icon: <CheckCircle className="w-4 h-4 text-ink shrink-0" />,
-      defaultTitle: "TIP",
+      container: "bg-emerald-500/5 border-emerald-500/20 text-emerald-950 dark:text-emerald-100",
+      iconColor: "text-emerald-600 dark:text-emerald-400",
+      titleColor: "text-emerald-900 dark:text-emerald-200",
+      textColor: "text-emerald-900/80 dark:text-emerald-200/80",
+      icon: <CheckCircle className="w-4 h-4 shrink-0" />,
+      defaultTitle: "Tip",
     },
     warning: {
-      bg: "bg-surface",
-      border: "border-ink",
-      accent: "bg-accent-yellow text-ink",
-      icon: <AlertTriangle className="w-4 h-4 text-ink shrink-0" />,
-      defaultTitle: "WARNING",
+      container: "bg-amber-500/5 border-amber-500/20 text-amber-950 dark:text-amber-100",
+      iconColor: "text-amber-600 dark:text-amber-400",
+      titleColor: "text-amber-900 dark:text-amber-200",
+      textColor: "text-amber-900/80 dark:text-amber-200/80",
+      icon: <AlertTriangle className="w-4 h-4 shrink-0" />,
+      defaultTitle: "Warning",
     },
     important: {
-      bg: "bg-surface",
-      border: "border-ink",
-      accent: "bg-accent-pink text-ink",
-      icon: <Zap className="w-4 h-4 text-ink shrink-0" />,
-      defaultTitle: "IMPORTANT",
+      container: "bg-violet-500/5 border-violet-500/20 text-violet-950 dark:text-violet-100",
+      iconColor: "text-violet-600 dark:text-violet-400",
+      titleColor: "text-violet-900 dark:text-violet-200",
+      textColor: "text-violet-900/80 dark:text-violet-200/80",
+      icon: <Zap className="w-4 h-4 shrink-0" />,
+      defaultTitle: "Important",
     },
   }[type];
 
   return (
-    <div className={`my-4 p-4 ${styles.bg} border-2 sm:border-3 ${styles.border} shadow-neo-xs sm:shadow-neo-sm flex flex-col gap-2 text-ink`}>
-      <div className="flex items-center gap-2 font-mono font-black text-xs uppercase tracking-wider">
-        <span className={`px-2 py-0.5 border border-ink ${styles.accent} flex items-center gap-1.5`}>
-          {styles.icon}
-          <span>{title || styles.defaultTitle}</span>
-        </span>
+    <div className={`my-5 p-4 rounded-xl border ${styles.container} flex gap-3 text-sm leading-relaxed`}>
+      <div className={`mt-0.5 ${styles.iconColor}`}>
+        {styles.icon}
       </div>
-      <div className="font-sans text-xs sm:text-sm font-semibold text-ink-muted leading-relaxed pl-0.5">
-        {children}
+      <div className="flex-1 min-w-0">
+        <h5 className={`font-sans font-semibold text-xs uppercase tracking-wider mb-1 ${styles.titleColor}`}>
+          {title || styles.defaultTitle}
+        </h5>
+        <div className={`font-sans text-[13.5px] leading-relaxed ${styles.textColor}`}>
+          {children}
+        </div>
       </div>
     </div>
   );

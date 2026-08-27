@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Plus+Jakarta+Sans:wght@500;700;800&family=Space+Grotesk:wght@500;700&family=Syne:wght@700;800&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,11 +8,10 @@
    ⚡ RAW ARCHITECTURAL NEOBRUTALISM MULTI-THEME ENGINE
    ========================================================================== */
 
-/* Universal Sharp Border Radius & Box Sizing */
+/* Universal Box Sizing */
 *,
 *::before,
 *::after {
-  border-radius: 0px !important;
   box-sizing: border-box;
 }
 

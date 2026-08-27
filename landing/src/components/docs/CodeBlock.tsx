@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, Terminal, FileCode } from "lucide-react";
 import { playClick, playTone } from "@/lib/sound";
 
 interface CodeBlockProps {
@@ -38,37 +38,46 @@ export default function CodeBlock({
   const lines = currentCode.split("\n");
 
   return (
-    <div className="my-4 bg-[#0C0D10] text-[#F8FAFC] border-2 sm:border-3 border-ink shadow-neo-sm overflow-hidden font-mono text-xs sm:text-sm w-full max-w-full">
+    <div className="my-5 rounded-xl border border-zinc-200 dark:border-zinc-800/80 bg-[#0d1117] text-zinc-100 shadow-sm overflow-hidden font-mono text-xs sm:text-[13px] w-full max-w-full">
       {/* Header / Tabs Bar */}
-      <div className="bg-[#15171C] border-b-2 border-ink px-3 sm:px-4 py-2 flex items-center justify-between gap-2 overflow-x-auto no-scrollbar">
+      <div className="bg-[#161b22] border-b border-zinc-800/80 px-3.5 py-2 flex items-center justify-between gap-2 overflow-x-auto no-scrollbar">
         {tabs && tabKeys.length > 0 ? (
           <div className="flex items-center gap-1.5 shrink-0">
-            {tabKeys.map((tab) => (
-              <button
-                key={tab}
-                onClick={() => {
-                  setActiveTab(tab);
-                  playClick();
-                }}
-                className={`btn-sharp px-2.5 py-1 text-[11px] font-black uppercase tracking-wider border transition-all ${
-                  activeTab === tab
-                    ? "bg-accent-yellow text-ink border-ink shadow-neo-xs font-black"
-                    : "bg-[#1E222B] text-gray-300 border-transparent hover:border-ink hover:text-white"
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
+            {tabKeys.map((tab) => {
+              const isActive = activeTab === tab;
+              return (
+                <button
+                  key={tab}
+                  onClick={() => {
+                    setActiveTab(tab);
+                    playClick();
+                  }}
+                  className={`px-3 py-1 text-xs rounded-md transition-all font-sans font-medium ${
+                    isActive
+                      ? "bg-zinc-800 text-white shadow-xs"
+                      : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40"
+                  }`}
+                >
+                  {tab}
+                </button>
+              );
+            })}
           </div>
         ) : (
           <div className="flex items-center gap-2 min-w-0">
-            <span className="w-2.5 h-2.5 bg-[#FF5C8A] inline-block shrink-0"></span>
-            <span className="w-2.5 h-2.5 bg-[#FEE75C] inline-block shrink-0"></span>
-            <span className="w-2.5 h-2.5 bg-[#57F287] inline-block shrink-0"></span>
+            <div className="flex items-center gap-1.5 mr-1 select-none">
+              <span className="w-2.5 h-2.5 rounded-full bg-zinc-700/80 inline-block"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-zinc-700/80 inline-block"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-zinc-700/80 inline-block"></span>
+            </div>
             {title ? (
-              <span className="text-gray-300 font-bold text-xs truncate ml-1">{title}</span>
+              <span className="text-zinc-300 font-sans font-medium text-xs truncate flex items-center gap-1.5">
+                <FileCode className="w-3.5 h-3.5 text-zinc-400" />
+                {title}
+              </span>
             ) : (
-              <span className="text-gray-400 font-bold text-[11px] uppercase tracking-wider ml-1">
+              <span className="text-zinc-400 font-sans text-xs flex items-center gap-1.5">
+                <Terminal className="w-3 h-3 text-zinc-500" />
                 {language}
               </span>
             )}
@@ -78,13 +87,13 @@ export default function CodeBlock({
         {/* Copy Button */}
         <button
           onClick={handleCopy}
-          className="btn-sharp shrink-0 bg-[#242933] text-gray-200 hover:text-white hover:bg-accent-yellow hover:text-ink px-2.5 py-1 border border-gray-600 hover:border-ink text-[11px] font-black uppercase flex items-center gap-1 transition-all"
-          title="Copy to clipboard"
+          className="shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-sans font-medium text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/80 transition-all"
+          title="Copy code"
         >
           {copied ? (
             <>
-              <Check className="w-3.5 h-3.5 text-accent-green stroke-[3]" />
-              <span className="text-accent-green">Copied</span>
+              <Check className="w-3.5 h-3.5 text-emerald-400 stroke-[2.5]" />
+              <span className="text-emerald-400">Copied</span>
             </>
           ) : (
             <>
@@ -96,13 +105,13 @@ export default function CodeBlock({
       </div>
 
       {/* Code Snippet Content */}
-      <div className="p-3.5 sm:p-4 overflow-x-auto no-scrollbar leading-relaxed">
-        <pre className="text-gray-200 font-mono text-[11px] sm:text-xs leading-relaxed selection:bg-accent-yellow selection:text-black">
+      <div className="p-4 overflow-x-auto no-scrollbar leading-relaxed">
+        <pre className="text-zinc-200 font-mono text-[12px] sm:text-[13px] leading-relaxed selection:bg-blue-500/30 selection:text-white">
           <code>
             {showLineNumbers
               ? lines.map((line, idx) => (
                   <div key={idx} className="flex">
-                    <span className="w-8 select-none text-gray-600 text-right pr-3 shrink-0 font-mono">
+                    <span className="w-8 select-none text-zinc-600 text-right pr-4 shrink-0 font-mono text-[11px]">
                       {idx + 1}
                     </span>
                     <span className="whitespace-pre">{line}</span>

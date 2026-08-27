@@ -22,14 +22,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="theme-default overflow-x-hidden">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Plus+Jakarta+Sans:wght@500;700;800&family=Space+Grotesk:wght@500;700&family=Syne:wght@700;800&display=swap"
-          rel="stylesheet"
-        />
-      </head>
       <body className="font-sans bg-pattern text-ink antialiased selection:bg-accent-yellow selection:text-ink min-h-screen w-full max-w-full overflow-x-hidden m-0 p-0">
         {children}
       </body>
