@@ -1,4 +1,5 @@
 import path from "node:path";
+import pc from "picocolors";
 import { FileSystem } from "../utils/filesystem.js";
 import { Logger } from "../utils/logger.js";
 
@@ -166,7 +167,15 @@ export async function skillCommand(options: SkillOptions = {}) {
   await FileSystem.ensureDir(targetDir);
   await FileSystem.writeFile(targetFile, SKILL_CONTENT);
 
-  Logger.success(`Successfully installed AI Agent Skill at: ${targetFile}`);
-  console.log();
-  Logger.info("Your AI assistant (Antigravity, Cursor, Claude Code, etc.) can now autonomously convert, configure, and package web applications into native Android, Windows, and Linux apps.");
+  const skillLines = [
+    `${pc.dim("Path:")}        ${pc.cyan(targetFile)}`,
+    `${pc.dim("Assistants:")}  Google Antigravity, Claude Code, Cursor, Windsurf, Copilot`,
+    "---",
+    `${pc.dim("Example AI Prompt:")}`,
+    `  ${pc.white('"Convert this project to an Android APK and run web2app doctor"')}`,
+  ];
+
+  Logger.card("🤖 AI Agent Skill Installed", skillLines, {
+    borderColor: pc.cyan,
+  });
 }

@@ -1,4 +1,5 @@
 import path from "node:path";
+import pc from "picocolors";
 import { ConfigLoader } from "../core/config-loader.js";
 import { ProjectDetector } from "../core/project-detector.js";
 import { WebBuilder } from "../core/web-builder.js";
@@ -38,14 +39,14 @@ export class MultiPlatformBuilder {
 
     const isUrl = Boolean(config.url || projectInfo.url);
 
-    Logger.info(`Target:    ${isUrl ? `🌐 Web Page (${config.url || projectInfo.url})` : `📁 Local Web App (${projectInfo.framework.toUpperCase()})`}`);
-    Logger.info(`App Name:  ${config.appName}`);
-    Logger.info(`Package:   ${config.packageName} (v${config.version})`);
+    Logger.kv("Target:", isUrl ? `🌐 Web Page (${pc.cyan(config.url || projectInfo.url)})` : `📁 Local Web App (${pc.cyan(projectInfo.framework.toUpperCase())})`);
+    Logger.kv("App Name:", pc.bold(config.appName));
+    Logger.kv("Package:", `${config.packageName} ${pc.gray(`(v${config.version})`)}`);
 
     // 2. Build web assets if local project
     let webOutputDir: string | null = null;
     if (!isUrl) {
-      Logger.step(1, 4, "Building web assets");
+      Logger.step(1, 4, "Building web assets", projectInfo.framework);
       webOutputDir = await WebBuilder.build(projectInfo, config, {
         verbose: options.verbose,
         skipBuild: options.skipWebBuild,
@@ -58,7 +59,7 @@ export class MultiPlatformBuilder {
 
     // 4. Determine platforms to build
     const platformsToBuild = this.resolvePlatforms(options.platform, config);
-    Logger.info(`Target Platforms: ${platformsToBuild.map((p) => p.toUpperCase()).join(", ")}`);
+    Logger.kv("Platforms:", platformsToBuild.map((p) => `${Logger.platformIcon(p)} ${p}`).join("  "));
 
     const results: Record<string, PlatformBuildResult> = {};
 
@@ -67,11 +68,15 @@ export class MultiPlatformBuilder {
     const totalSteps = platformsToBuild.length + 1;
 
     for (const platform of platformsToBuild) {
+      const icon = Logger.platformIcon(platform);
       Logger.step(
         currentStep++,
         totalSteps,
-        `Building ${platform.toUpperCase()} package in ${path.basename(appDir)}/${platform}`
+        `Compiling ${platform.toUpperCase()} target`,
+        `${path.basename(appDir)}/${platform}`
       );
+
+      const platStartTime = Date.now();
 
       try {
         let result: PlatformBuildResult;
@@ -102,15 +107,17 @@ export class MultiPlatformBuilder {
           }
         }
 
+        result.durationMs = Date.now() - platStartTime;
         results[platform] = result;
-        Logger.success(`Successfully built ${platform.toUpperCase()} app -> ${result.outputDir}`);
+        const durationStr = `${(result.durationMs / 1000).toFixed(2)}s`;
+        Logger.success(`${icon} Built ${platform.toUpperCase()} package ${pc.gray(`(${durationStr})`)}`);
       } catch (err: any) {
         Logger.error(`Failed to build ${platform} package:`, err?.message || String(err));
         results[platform] = {
           platform,
           outputDir: Paths.getPlatformOutputDir(platform, userProjectRoot, options.out),
           files: [],
-          durationMs: 0,
+          durationMs: Date.now() - platStartTime,
           success: false,
           error: err?.message || String(err),
         };
@@ -118,28 +125,39 @@ export class MultiPlatformBuilder {
     }
 
     const durationMs = Date.now() - startTime;
+    const totalSeconds = (durationMs / 1000).toFixed(2);
 
-    // 6. Display comprehensive summary
-    console.log();
+    // 6. Display modern comprehensive summary card
     const summaryLines: string[] = [
-      `Application:  ${config.appName} (v${config.version})`,
-      `Output Root:  ${appDir}`,
-      "",
+      `${pc.dim("Application:")}  ${pc.bold(config.appName)} ${pc.gray(`(v${config.version})`)}  ${pc.dim("•")}  ${pc.cyan(`${totalSeconds}s total`)}`,
+      `${pc.dim("Output Root:")}  ${pc.white(appDir)}`,
+      "---",
     ];
 
     for (const [p, res] of Object.entries(results)) {
-      const statusIcon = res.success ? "✔" : "✖";
+      const statusIcon = res.success ? pc.green("✔") : pc.red("✖");
+      const icon = Logger.platformIcon(p);
       const relPath = path.relative(userProjectRoot, res.outputDir) || res.outputDir;
+      const sizeStr = res.formattedSize ? pc.dim(` [${res.formattedSize}]`) : "";
+      const timeStr = res.durationMs ? pc.gray(` (${(res.durationMs / 1000).toFixed(2)}s)`) : "";
+
       summaryLines.push(
-        `${statusIcon} /${p.padEnd(9)} -> ${relPath} ${res.formattedSize ? `(${res.formattedSize})` : ""}`
+        `${statusIcon} ${icon} ${pc.bold(p.toUpperCase().padEnd(8))} ${pc.white(relPath)}${sizeStr}${timeStr}`
       );
       if (res.mainArtifact) {
-        summaryLines.push(`    Artifact:  ${path.basename(res.mainArtifact)}`);
+        summaryLines.push(`     ${pc.dim("Artifact:")}  ${pc.cyan(path.basename(res.mainArtifact))}`);
       }
     }
 
-    Logger.box("🎉 Multi-Platform Build Completed!", summaryLines);
-    console.log();
+    summaryLines.push("---");
+    summaryLines.push(`${pc.dim("Quick Actions:")}`);
+    summaryLines.push(`  • Run on Android:   ${pc.cyan("npx web2app run android")}`);
+    summaryLines.push(`  • Open in Studio:   ${pc.cyan("npx web2app open android")}`);
+    summaryLines.push(`  • Install AI Skill: ${pc.cyan("npx web2app skill")}`);
+
+    Logger.card(`⚡ Multi-Platform Build Complete`, summaryLines, {
+      borderColor: pc.cyan,
+    });
 
     return {
       appDir,

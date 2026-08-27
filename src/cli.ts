@@ -8,13 +8,31 @@ import { runCommand } from "./commands/run.js";
 import { skillCommand } from "./commands/skill.js";
 import { CLI_DESCRIPTION, CLI_NAME, CLI_VERSION } from "./constants.js";
 import { Logger } from "./utils/logger.js";
+import pc from "picocolors";
 
 const program = new Command();
 
 program
   .name(CLI_NAME)
   .version(CLI_VERSION, "-v, --version", "Output the current version of web2app")
-  .description(CLI_DESCRIPTION);
+  .description(CLI_DESCRIPTION)
+  .addHelpText("before", () => {
+    const line1 = pc.cyan(" ╦ ╦╔═╗╔╗ ┌─┐╔═╗╔═╗╔═╗");
+    const line2 = pc.cyan(" ║║║║╣ ╠╩╗┌─╝╠═╣╠═╝╠═╝");
+    const line3 = pc.blue(" ╚╩╝╚═╝╚═╝└─┘╩ ╩╩  ╩  ");
+
+    return `\n${line1}\n${line2}\n${line3}\n\n ${pc.cyan("⚡")} ${pc.bold(pc.white("web2app"))} ${pc.gray("v" + CLI_VERSION)} ${pc.dim("•")} ${pc.dim(CLI_DESCRIPTION)}\n`;
+  })
+  .addHelpText("after", () => {
+    return `
+${pc.bold(pc.white("Examples:"))}
+  ${pc.cyan("npx web2app https://news.ycombinator.com")}       Convert a live URL into native apps
+  ${pc.cyan("npx web2app build")}                              Build all 4 native targets for current project
+  ${pc.cyan("npx web2app build android --release")}            Build production Android release APK
+  ${pc.cyan("npx web2app doctor")}                             Diagnose JDK, Android SDK, and build tools
+  ${pc.cyan("npx web2app skill")}                              Install AI Agent Skill for Antigravity & Claude
+`;
+  });
 
 program
   .command("init")
@@ -106,10 +124,9 @@ if (args.length > 0 && !knownCommands.includes(args[0]) && !args[0].startsWith("
   const isUrl = /^https?:\/\//i.test(target);
   await buildCommand(isUrl ? target : "all", isUrl ? { url: target } : {});
 } else {
-  program.parse(process.argv);
-
   if (!args.length) {
-    Logger.banner();
     program.outputHelp();
+  } else {
+    program.parse(process.argv);
   }
 }

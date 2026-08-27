@@ -1,4 +1,5 @@
 import path from "node:path";
+import pc from "picocolors";
 import prompts from "prompts";
 import { ConfigLoader } from "../core/config-loader.js";
 import { ProjectDetector } from "../core/project-detector.js";
@@ -33,17 +34,20 @@ export async function initCommand(options: InitOptions = {}) {
   let version = defaultVersion;
 
   if (!options.yes) {
+    console.log(` ${pc.cyan("⚡")} ${pc.bold(pc.white("Configuration Setup Wizard"))}`);
+    console.log(pc.gray("    Configure your application metadata and platform options\n"));
+
     const responses = await prompts([
       {
         type: "text",
         name: "appName",
-        message: "What is your application name?",
+        message: "What is your application display name?",
         initial: defaultAppName,
       },
       {
         type: "text",
         name: "packageName",
-        message: "What is your Android package ID (e.g. com.company.app)?",
+        message: "What is your package ID (e.g. com.company.app)?",
         initial: defaultPackageName,
         validate: (val) =>
           /^[a-zA-Z][a-zA-Z0-9_]*(\.[a-zA-Z][a-zA-Z0-9_]*)+$/.test(val)
@@ -77,6 +81,9 @@ const config: Web2AppUserConfig = {
   version: ${JSON.stringify(version)},
   versionCode: 1,
 
+  // Target platforms to compile
+  platforms: ["android", "windows", "debian", "arch"],
+
   // Android specific options
   android: {
     minSdk: 24,
@@ -90,7 +97,16 @@ export default config;
 
   await FileSystem.writeFile(targetConfigPath, configContent);
 
-  Logger.success(`Created configuration file: ${path.basename(targetConfigPath)}`);
-  console.log();
-  Logger.tip("To build your Android app, run: npx web2app build android");
+  const initLines = [
+    `${pc.dim("File:")}        ${pc.cyan(path.basename(targetConfigPath))}`,
+    `${pc.dim("App Name:")}    ${pc.bold(appName)}`,
+    `${pc.dim("Package ID:")}  ${packageName}`,
+    `${pc.dim("Version:")}     ${version}`,
+    "---",
+    `${pc.dim("Next Step:")}   Run ${pc.cyan("npx web2app build")} to compile all native targets`,
+  ];
+
+  Logger.card("✨ Configuration Initialized", initLines, {
+    borderColor: pc.green,
+  });
 }
