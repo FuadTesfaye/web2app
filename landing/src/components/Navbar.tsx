@@ -89,7 +89,7 @@ export default function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-surface/95 backdrop-blur-md border-b-3 border-ink px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3 transition-colors w-full max-w-full">
+    <header className="sticky top-0 z-50 bg-surface/95 backdrop-blur-md border-b-3 border-ink px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3 transition-colors w-full shadow-neo-xs sm:shadow-neo-sm">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
         
         {/* Brand Logo */}
